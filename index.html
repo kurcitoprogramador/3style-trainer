@@ -28,6 +28,7 @@
       --accent: #e9edf5;
       --success: #93b59d;
       --danger: #d49494;
+      --warn: #c9b87a;
 
       --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.34);
       --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.22);
@@ -243,6 +244,13 @@
       letter-spacing: .04em;
     }
 
+    .btn-main-icon.memo-icon {
+      font-size: 11px;
+      letter-spacing: .01em;
+      line-height: 1.1;
+      text-align: center;
+    }
+
     .status-dot {
       display: flex;
       align-items: center;
@@ -383,13 +391,8 @@
       transition: opacity .18s ease, transform .12s ease;
     }
 
-    .btn-start:disabled {
-      opacity: .4;
-    }
-
-    .btn-start:not(:disabled):active {
-      transform: scale(.99);
-    }
+    .btn-start:disabled { opacity: .4; }
+    .btn-start:not(:disabled):active { transform: scale(.99); }
 
     /* Practice */
     #screen-practice {
@@ -621,7 +624,442 @@
       font-weight: 700;
     }
 
-    /* Helpers */
+    /* ===================== MEMO M2 OP ===================== */
+
+    #screen-memo {
+      justify-content: flex-start;
+      padding: 0;
+    }
+
+    .memo-header {
+      width: 100%;
+      padding: 54px 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .memo-header-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+
+    .memo-phase-badge {
+      margin-left: auto;
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .memo-phase-badge.memo {
+      background: rgba(147,181,157,0.15);
+      color: var(--success);
+      border: 1px solid rgba(147,181,157,0.25);
+    }
+
+    .memo-phase-badge.test {
+      background: rgba(201,184,122,0.15);
+      color: var(--warn);
+      border: 1px solid rgba(201,184,122,0.25);
+    }
+
+    .memo-phase-badge.done {
+      background: rgba(238,242,248,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(238,242,248,0.2);
+    }
+
+    .memo-body {
+      flex: 1;
+      width: 100%;
+      overflow-y: auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 140px;
+    }
+
+    .memo-config-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .memo-config-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .memo-toggle-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .memo-toggle {
+      flex: 1;
+      padding: 14px 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-soft);
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      transition: all .15s ease;
+    }
+
+    .memo-toggle.active {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.22);
+      color: var(--accent);
+    }
+
+    .memo-toggle:active { transform: scale(.97); }
+
+    .memo-length-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .memo-length-label {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .memo-length-val {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    .memo-length-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .memo-length-btn:active { transform: scale(.93); }
+
+    .memo-note {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .memo-note b { color: var(--text-soft); }
+
+    .memo-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .memo-pairs-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .memo-pair-chip {
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+
+    .memo-pair-chip .pair-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      position: absolute;
+      top: 5px;
+      left: 8px;
+      letter-spacing: .04em;
+    }
+
+    .memo-pair-chip .pair-letters {
+      margin-top: 8px;
+    }
+
+    .memo-pair-sep {
+      color: rgba(255,255,255,0.2);
+      font-size: 16px;
+    }
+
+    .test-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .test-progress-bar {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .test-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #c9b87a, #e8dba8);
+      transition: width .22s ease;
+    }
+
+    .test-progress-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .test-phase-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .test-inputs-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .test-pair-slot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+
+    .test-pair-num {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .06em;
+    }
+
+    .test-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 10px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      transition: border-color .15s, background .15s;
+    }
+
+    .test-input-wrap.active-slot {
+      border-color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .test-input-wrap.correct {
+      border-color: rgba(147,181,157,0.5);
+      background: rgba(147,181,157,0.08);
+    }
+
+    .test-input-wrap.wrong {
+      border-color: rgba(212,148,148,0.5);
+      background: rgba(212,148,148,0.08);
+    }
+
+    .test-letter-box {
+      width: 22px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      color: var(--text);
+    }
+
+    .test-letter-box.empty {
+      color: rgba(255,255,255,0.15);
+    }
+
+    .test-letter-box.correct-letter { color: var(--success); }
+    .test-letter-box.wrong-letter { color: var(--danger); }
+
+    .test-sep {
+      font-size: 12px;
+      color: rgba(255,255,255,0.15);
+      font-weight: 700;
+    }
+
+    .test-answer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    #memoKeyboardCapture {
+      position: fixed;
+      top: -200px;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: transparent;
+      caret-color: transparent;
+      font-size: 16px;
+    }
+
+    .result-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .result-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .result-pairs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .result-pair-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .result-pair-row.correct {
+      border-color: rgba(147,181,157,0.3);
+      background: rgba(147,181,157,0.06);
+    }
+
+    .result-pair-row.wrong {
+      border-color: rgba(212,148,148,0.3);
+      background: rgba(212,148,148,0.06);
+    }
+
+    .result-pair-letters {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      min-width: 52px;
+    }
+
+    .result-pair-answer {
+      font-size: 13px;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .result-pair-icon {
+      font-size: 16px;
+    }
+
+    .result-score-card {
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .result-score-num {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -.07em;
+    }
+
+    .result-score-label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .memo-footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 14px 20px 28px;
+      background: linear-gradient(180deg, rgba(16,18,22,0), rgba(16,18,22,0.94) 26%, rgba(16,18,22,1) 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .memo-footer-hint {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 600;
+    }
+
     .animate-in {
       animation: slideUp .32s ease both;
     }
@@ -629,6 +1067,11 @@
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     ::-webkit-scrollbar { width: 4px; }
@@ -644,12 +1087,15 @@
 </head>
 <body>
   <div class="tap-flash" id="tapFlash"></div>
+  <input id="memoKeyboardCapture" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" />
 
+  <!-- LOADING -->
   <div class="screen" id="screen-loading">
     <div class="loader-cube"></div>
     <div class="loader-text" id="loadingMsg">cargando datos...</div>
   </div>
 
+  <!-- ERROR -->
   <div class="screen hidden" id="screen-error">
     <div class="error-card glass">
       <div class="error-title">Error de carga</div>
@@ -658,6 +1104,7 @@
     </div>
   </div>
 
+  <!-- HOME -->
   <div class="screen hidden" id="screen-home">
     <div class="home-top">
       <div class="home-title">3Style<span>Trainer</span></div>
@@ -680,6 +1127,14 @@
         </div>
         <div class="btn-main-icon">UFR</div>
       </button>
+
+      <button class="btn-main glass btn-plain" onclick="openMemo()">
+        <div class="btn-main-inner">
+          <div class="btn-main-label">Memo M2 OP</div>
+          <div class="btn-main-sub">Entrenador de memorización</div>
+        </div>
+        <div class="btn-main-icon memo-icon">M2<br/>OP</div>
+      </button>
     </div>
 
     <div class="status-dot">
@@ -688,6 +1143,7 @@
     </div>
   </div>
 
+  <!-- SETS -->
   <div class="screen hidden" id="screen-sets">
     <div class="sets-header">
       <button class="btn-back glass btn-plain" onclick="showScreen('home')">‹</button>
@@ -705,6 +1161,7 @@
     </div>
   </div>
 
+  <!-- PRACTICE -->
   <div class="screen hidden" id="screen-practice" onclick="handleTap(event)">
     <div class="practice-shell glass">
       <div class="practice-topbar">
@@ -740,6 +1197,7 @@
     </div>
   </div>
 
+  <!-- DONE -->
   <div class="screen hidden" id="screen-done">
     <div class="done-card glass">
       <div class="done-title">Sesión completa</div>
@@ -753,7 +1211,26 @@
     </div>
   </div>
 
+  <!-- MEMO -->
+  <div class="screen hidden" id="screen-memo">
+    <div class="memo-header">
+      <button class="btn-back glass btn-plain" onclick="memoGoHome()">‹</button>
+      <div class="memo-header-title" id="memoHeaderTitle">Memo M2 OP</div>
+      <div class="memo-phase-badge memo" id="memoPhaseBadge">CONFIG</div>
+    </div>
+
+    <div class="memo-body" id="memoBody"></div>
+
+    <div class="memo-footer" id="memoFooter">
+      <div class="memo-footer-hint" id="memoFooterHint"></div>
+      <button class="btn-start btn-plain" id="memoBtnAction" onclick="memoAction()">Generar secuencia</button>
+    </div>
+  </div>
+
   <script>
+    /* ============================================================
+       3STYLE DATA
+    ============================================================ */
     const URLS = {
       UF: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=405240257&single=true&output=csv',
       UFR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=1045305092&single=true&output=csv',
@@ -863,7 +1340,6 @@
         for (const row of rows) {
           const rowKey = cleanKey(row[0]);
           if (!rowKey) continue;
-
           const val = cleanValue(row[ci]);
           if (val) mat[col][rowKey] = val;
         }
@@ -1163,9 +1639,7 @@
 
     function handleTap(e) {
       if (e.target.closest('.practice-back') || e.target.closest('.btn-timer')) return;
-
       flashScreen();
-
       if (session.phase === 'idle') {
         revealAlg();
       } else {
@@ -1175,21 +1649,16 @@
 
     function toggleTimer(e) {
       e.stopPropagation();
-      if (session.timerRunning) {
-        pauseTimer();
-      } else {
-        startTimer();
-      }
+      if (session.timerRunning) pauseTimer();
+      else startTimer();
     }
 
     function startTimer() {
       if (session.timerRunning) return;
-
       session.timerRunning = true;
       const btn = document.getElementById('btnTimer');
       btn.classList.add('running');
       btn.textContent = '⏸ ' + formatTime(session.timerSecs);
-
       session.timerInterval = setInterval(() => {
         session.timerSecs++;
         btn.textContent = '⏸ ' + formatTime(session.timerSecs);
@@ -1200,7 +1669,6 @@
       session.timerRunning = false;
       clearInterval(session.timerInterval);
       session.timerInterval = null;
-
       const btn = document.getElementById('btnTimer');
       btn.classList.remove('running');
       btn.textContent = '▶ ' + formatTime(session.timerSecs);
@@ -1211,7 +1679,6 @@
       session.timerInterval = null;
       session.timerRunning = false;
       session.timerSecs = 0;
-
       const btn = document.getElementById('btnTimer');
       btn.classList.remove('running');
       btn.textContent = '▶ timer';
@@ -1258,6 +1725,577 @@
       e.stopPropagation();
       pauseTimer();
       showScreen('home');
+    }
+
+    /* ============================================================
+       MEMO M2 OP
+    ============================================================ */
+    const MEMO_EDGES_LETTERS = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
+    const MEMO_CORNERS_LETTERS = ['F','I','C','E','A','J','T','B','M','K','G','P','N','H','D','S','Q','L','O','R','U'];
+
+    const EDGE_FORBIDDEN_PAIRS = [
+      ['A','B'], ['D','C'], ['F','E'], ['O','P'],
+      ['I','J'], ['K','L'], ['M','N'], ['G','H'],
+      ['R','Q'], ['S','T'], ['Y','U']
+    ];
+
+    const CORNER_FORBIDDEN_GROUPS = [
+      ['A','B','C'],
+      ['D','E','F'],
+      ['I','G','H'],
+      ['M','N','O'],
+      ['P','Q','R'],
+      ['S','T','U'],
+      ['K','L','J']
+    ];
+
+    let memo = {
+      phase: 'config',
+      includeEdges: true,
+      includeCorners: true,
+      edgeCount: 10,
+      cornerCount: 6,
+      generatedEdges: [],
+      generatedCorners: [],
+      testPhase: null,
+      currentTestPairIdx: 0,
+      currentLetterIdx: 0,
+      typedLetters: [],
+      edgeResults: [],
+      cornerResults: [],
+    };
+
+    function edgePairForbidden(a, b) {
+      if (a === b) return true;
+      return EDGE_FORBIDDEN_PAIRS.some(([x, y]) =>
+        (x === a && y === b) || (x === b && y === a)
+      );
+    }
+
+    function cornerPairForbidden(a, b) {
+      if (a === b) return true;
+      return CORNER_FORBIDDEN_GROUPS.some(group => group.includes(a) && group.includes(b));
+    }
+
+    function generatePairs(letters, forbiddenFn, count) {
+      const pairs = [];
+      let attempts = 0;
+
+      while (pairs.length < count && attempts < 5000) {
+        attempts++;
+        const a = letters[Math.floor(Math.random() * letters.length)];
+        const b = letters[Math.floor(Math.random() * letters.length)];
+        if (forbiddenFn(a, b)) continue;
+
+        const last = pairs[pairs.length - 1];
+        if (last && last[0] === a && last[1] === b) continue;
+
+        pairs.push([a, b]);
+      }
+
+      return pairs;
+    }
+
+    function openMemo() {
+      memo.phase = 'config';
+      renderMemo();
+      showScreen('memo');
+    }
+
+    function memoGoHome() {
+      blurKeyboard();
+      showScreen('home');
+    }
+
+    function setMemoBadge(text, mode) {
+      const badge = document.getElementById('memoPhaseBadge');
+      badge.className = 'memo-phase-badge ' + mode;
+      badge.textContent = text;
+    }
+
+    function renderMemo() {
+      const body = document.getElementById('memoBody');
+      const footer = document.getElementById('memoFooter');
+      const btn = document.getElementById('memoBtnAction');
+      const hint = document.getElementById('memoFooterHint');
+      const headerTitle = document.getElementById('memoHeaderTitle');
+
+      body.innerHTML = '';
+      btn.style.display = 'flex';
+      btn.disabled = false;
+      footer.style.display = 'flex';
+
+      if (memo.phase === 'config') {
+        setMemoBadge('CONFIG', 'memo');
+        headerTitle.textContent = 'Memo M2 OP';
+        hint.textContent = '';
+        btn.textContent = 'Generar secuencia';
+        renderMemoConfig(body);
+        return;
+      }
+
+      if (memo.phase === 'memo-corners') {
+        setMemoBadge('MEMO', 'memo');
+        headerTitle.textContent = 'Memoriza esquinas';
+        hint.textContent = 'Memorízalas bien antes de continuar';
+        btn.textContent = memo.includeEdges ? 'Listo → ver aristas' : 'Listo → empezar test';
+        renderMemoDisplay(body, memo.generatedCorners, 'Esquinas');
+        return;
+      }
+
+      if (memo.phase === 'memo-edges') {
+        setMemoBadge('MEMO', 'memo');
+        headerTitle.textContent = 'Memoriza aristas';
+        hint.textContent = 'Memorízalas bien antes de continuar';
+        btn.textContent = 'Listo → empezar test';
+        renderMemoDisplay(body, memo.generatedEdges, 'Aristas');
+        return;
+      }
+
+      if (memo.phase === 'test-edges') {
+        setMemoBadge('TEST', 'test');
+        headerTitle.textContent = 'Ejecuta aristas';
+        hint.textContent = 'Escribe cada letra de memoria';
+        btn.style.display = 'none';
+        renderMemoTest(body, 'edges');
+        return;
+      }
+
+      if (memo.phase === 'test-corners') {
+        setMemoBadge('TEST', 'test');
+        headerTitle.textContent = 'Ejecuta esquinas';
+        hint.textContent = 'Escribe cada letra de memoria';
+        btn.style.display = 'none';
+        renderMemoTest(body, 'corners');
+        return;
+      }
+
+      if (memo.phase === 'result') {
+        setMemoBadge('RESULTADO', 'done');
+        headerTitle.textContent = 'Resultado';
+        hint.textContent = '';
+        btn.textContent = 'Nueva sesión';
+        renderMemoResult(body);
+      }
+    }
+
+    function renderMemoConfig(body) {
+      const typeSection = document.createElement('div');
+      typeSection.className = 'memo-config-section';
+      typeSection.innerHTML = '<div class="memo-config-label">¿Qué practicar?</div>';
+
+      const row = document.createElement('div');
+      row.className = 'memo-toggle-row';
+
+      const btnEdges = document.createElement('button');
+      btnEdges.className = 'memo-toggle btn-plain' + (memo.includeEdges ? ' active' : '');
+      btnEdges.textContent = 'Aristas';
+      btnEdges.onclick = () => {
+        memo.includeEdges = !memo.includeEdges;
+        renderMemo();
+      };
+
+      const btnCorners = document.createElement('button');
+      btnCorners.className = 'memo-toggle btn-plain' + (memo.includeCorners ? ' active' : '');
+      btnCorners.textContent = 'Esquinas';
+      btnCorners.onclick = () => {
+        memo.includeCorners = !memo.includeCorners;
+        renderMemo();
+      };
+
+      row.appendChild(btnEdges);
+      row.appendChild(btnCorners);
+      typeSection.appendChild(row);
+      body.appendChild(typeSection);
+
+      if (memo.includeEdges) {
+        const sec = document.createElement('div');
+        sec.className = 'memo-config-section';
+        sec.innerHTML = '<div class="memo-config-label">Letras de aristas</div>';
+        sec.appendChild(makeMemoLengthRow('edge', memo.edgeCount, 10, 11));
+        body.appendChild(sec);
+      }
+
+      if (memo.includeCorners) {
+        const sec = document.createElement('div');
+        sec.className = 'memo-config-section';
+        sec.innerHTML = '<div class="memo-config-label">Letras de esquinas</div>';
+        sec.appendChild(makeMemoLengthRow('corner', memo.cornerCount, 6, 7));
+        body.appendChild(sec);
+      }
+
+      const note = document.createElement('div');
+      note.className = 'memo-note';
+      note.innerHTML = `
+        <b>¿Cómo funciona?</b><br>
+        1. Memorizas <b>esquinas</b> → luego <b>aristas</b><br>
+        2. Test: escribes <b>aristas</b> de memoria → luego <b>esquinas</b><br>
+        3. Ves tu resultado letra por letra
+      `;
+      body.appendChild(note);
+    }
+
+    function makeMemoLengthRow(type, val, min, max) {
+      const row = document.createElement('div');
+      row.className = 'memo-length-row';
+
+      const label = document.createElement('div');
+      label.className = 'memo-length-label';
+      label.textContent = 'Cantidad';
+
+      const btnMinus = document.createElement('button');
+      btnMinus.className = 'memo-length-btn btn-plain';
+      btnMinus.textContent = '−';
+      btnMinus.onclick = () => {
+        if (type === 'edge') memo.edgeCount = Math.max(min, memo.edgeCount - 1);
+        else memo.cornerCount = Math.max(min, memo.cornerCount - 1);
+        renderMemo();
+      };
+
+      const valEl = document.createElement('div');
+      valEl.className = 'memo-length-val';
+      valEl.textContent = val;
+
+      const btnPlus = document.createElement('button');
+      btnPlus.className = 'memo-length-btn btn-plain';
+      btnPlus.textContent = '+';
+      btnPlus.onclick = () => {
+        if (type === 'edge') memo.edgeCount = Math.min(max, memo.edgeCount + 1);
+        else memo.cornerCount = Math.min(max, memo.cornerCount + 1);
+        renderMemo();
+      };
+
+      row.appendChild(label);
+      row.appendChild(btnMinus);
+      row.appendChild(valEl);
+      row.appendChild(btnPlus);
+      return row;
+    }
+
+    function renderMemoDisplay(body, pairs, title) {
+      const titleEl = document.createElement('div');
+      titleEl.className = 'memo-section-title';
+      titleEl.textContent = `${title} — ${pairs.length} pares`;
+      body.appendChild(titleEl);
+
+      const grid = document.createElement('div');
+      grid.className = 'memo-pairs-grid';
+
+      pairs.forEach(([a, b], idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'memo-pair-chip';
+        chip.innerHTML = `
+          <span class="pair-num">${idx + 1}</span>
+          <span class="pair-letters">${a}<span class="memo-pair-sep"> · </span>${b}</span>
+        `;
+        grid.appendChild(chip);
+      });
+
+      body.appendChild(grid);
+    }
+
+    function initMemoTest(phase) {
+      const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      memo.testPhase = phase;
+      memo.currentTestPairIdx = 0;
+      memo.currentLetterIdx = 0;
+      memo.typedLetters = pairs.map(() => ['', '']);
+      focusKeyboard();
+    }
+
+    function renderMemoTest(body, phase) {
+      const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      const totalLetters = pairs.length * 2;
+      const answeredLetters = memo.currentTestPairIdx * 2 + memo.currentLetterIdx;
+
+      const progressRow = document.createElement('div');
+      progressRow.className = 'test-progress-row';
+
+      const bar = document.createElement('div');
+      bar.className = 'test-progress-bar';
+
+      const fill = document.createElement('div');
+      fill.className = 'test-progress-fill';
+      fill.style.width = `${totalLetters ? (answeredLetters / totalLetters) * 100 : 0}%`;
+
+      const lbl = document.createElement('div');
+      lbl.className = 'test-progress-label';
+      lbl.textContent = `${Math.min(memo.currentTestPairIdx + 1, pairs.length)} / ${pairs.length}`;
+
+      bar.appendChild(fill);
+      progressRow.appendChild(bar);
+      progressRow.appendChild(lbl);
+      body.appendChild(progressRow);
+
+      const phaseLbl = document.createElement('div');
+      phaseLbl.className = 'test-phase-label';
+      phaseLbl.textContent = phase === 'edges' ? '· ARISTAS ·' : '· ESQUINAS ·';
+      body.appendChild(phaseLbl);
+
+      const grid = document.createElement('div');
+      grid.className = 'test-inputs-grid';
+
+      pairs.forEach(([correctA, correctB], idx) => {
+        const typedA = memo.typedLetters[idx][0];
+        const typedB = memo.typedLetters[idx][1];
+        const isActive = idx === memo.currentTestPairIdx;
+        const isDone = idx < memo.currentTestPairIdx;
+
+        const slot = document.createElement('div');
+        slot.className = 'test-pair-slot';
+
+        const num = document.createElement('div');
+        num.className = 'test-pair-num';
+        num.textContent = idx + 1;
+
+        const wrap = document.createElement('div');
+        wrap.className = 'test-input-wrap';
+
+        if (isActive) wrap.classList.add('active-slot');
+        if (isDone) {
+          const ok = typedA.toUpperCase() === correctA && typedB.toUpperCase() === correctB;
+          wrap.classList.add(ok ? 'correct' : 'wrong');
+        }
+
+        const boxA = document.createElement('div');
+        boxA.className = 'test-letter-box';
+
+        if (isDone) {
+          boxA.classList.add(typedA.toUpperCase() === correctA ? 'correct-letter' : 'wrong-letter');
+          boxA.textContent = typedA || '_';
+        } else if (isActive) {
+          if (typedA) {
+            boxA.textContent = typedA;
+          } else if (memo.currentLetterIdx === 0) {
+            boxA.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
+          } else {
+            boxA.classList.add('empty');
+            boxA.textContent = '_';
+          }
+        } else {
+          boxA.classList.add('empty');
+          boxA.textContent = '_';
+        }
+
+        const sep = document.createElement('div');
+        sep.className = 'test-sep';
+        sep.textContent = '·';
+
+        const boxB = document.createElement('div');
+        boxB.className = 'test-letter-box';
+
+        if (isDone) {
+          boxB.classList.add(typedB.toUpperCase() === correctB ? 'correct-letter' : 'wrong-letter');
+          boxB.textContent = typedB || '_';
+        } else if (isActive && memo.currentLetterIdx === 1) {
+          if (typedB) {
+            boxB.textContent = typedB;
+          } else {
+            boxB.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
+          }
+        } else {
+          boxB.classList.add('empty');
+          boxB.textContent = '_';
+        }
+
+        wrap.appendChild(boxA);
+        wrap.appendChild(sep);
+        wrap.appendChild(boxB);
+
+        slot.appendChild(num);
+        slot.appendChild(wrap);
+        grid.appendChild(slot);
+      });
+
+      body.appendChild(grid);
+
+      if (memo.currentTestPairIdx > 0) {
+        const lastIdx = memo.currentTestPairIdx - 1;
+        const [ca, cb] = pairs[lastIdx];
+        const ta = memo.typedLetters[lastIdx][0];
+        const tb = memo.typedLetters[lastIdx][1];
+
+        if (!(ta.toUpperCase() === ca && tb.toUpperCase() === cb)) {
+          const hint = document.createElement('div');
+          hint.className = 'test-answer-row';
+          hint.innerHTML = `<span>Par ${lastIdx + 1} correcto:</span><span style="font-size:18px;font-weight:800;color:var(--success)">${ca} · ${cb}</span>`;
+          body.appendChild(hint);
+        }
+      }
+
+      setTimeout(() => {
+        const slots = body.querySelectorAll('.test-pair-slot');
+        if (slots[memo.currentTestPairIdx]) {
+          slots[memo.currentTestPairIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 50);
+    }
+
+    function focusKeyboard() {
+      const inp = document.getElementById('memoKeyboardCapture');
+      inp.value = '';
+      inp.focus();
+      inp.oninput = handleMemoInput;
+      setTimeout(() => inp.focus(), 50);
+    }
+
+    function blurKeyboard() {
+      const inp = document.getElementById('memoKeyboardCapture');
+      inp.blur();
+      inp.oninput = null;
+    }
+
+    function handleMemoInput(e) {
+      const raw = String(e.target.value || '').toUpperCase().replace(/[^A-Z]/g, '');
+      if (!raw) return;
+
+      const typedChar = raw.slice(-1);
+      e.target.value = '';
+
+      const pairs = memo.testPhase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      if (memo.currentTestPairIdx >= pairs.length) return;
+
+      memo.typedLetters[memo.currentTestPairIdx][memo.currentLetterIdx] = typedChar;
+
+      if (memo.currentLetterIdx === 0) {
+        memo.currentLetterIdx = 1;
+      } else {
+        memo.currentLetterIdx = 0;
+        memo.currentTestPairIdx += 1;
+
+        if (memo.currentTestPairIdx >= pairs.length) {
+          finishMemoTest();
+          return;
+        }
+      }
+
+      renderMemo();
+      focusKeyboard();
+    }
+
+    function finishMemoTest() {
+      const pairs = memo.testPhase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      const results = pairs.map((pair, idx) => {
+        const answer = memo.typedLetters[idx];
+        const correct = answer[0].toUpperCase() === pair[0] && answer[1].toUpperCase() === pair[1];
+        return { pair, answer, correct };
+      });
+
+      if (memo.testPhase === 'edges') {
+        memo.edgeResults = results;
+        if (memo.includeCorners && memo.generatedCorners.length) {
+          memo.phase = 'test-corners';
+          initMemoTest('corners');
+          renderMemo();
+          return;
+        }
+      } else {
+        memo.cornerResults = results;
+      }
+
+      memo.phase = 'result';
+      blurKeyboard();
+      renderMemo();
+    }
+
+    function renderMemoResult(body) {
+      const all = [...memo.edgeResults, ...memo.cornerResults];
+      const total = all.length;
+      const correct = all.filter(x => x.correct).length;
+      const pct = total ? Math.round((correct / total) * 100) : 0;
+
+      const card = document.createElement('div');
+      card.className = 'result-score-card';
+      card.innerHTML = `
+        <div class="result-score-num">${pct}%</div>
+        <div class="result-score-label">${correct} de ${total} pares correctos</div>
+      `;
+      body.appendChild(card);
+
+      if (memo.edgeResults.length) {
+        body.appendChild(renderResultSection('Aristas', memo.edgeResults));
+      }
+
+      if (memo.cornerResults.length) {
+        body.appendChild(renderResultSection('Esquinas', memo.cornerResults));
+      }
+    }
+
+    function renderResultSection(title, results) {
+      const sec = document.createElement('div');
+      sec.className = 'result-section';
+
+      const ttl = document.createElement('div');
+      ttl.className = 'result-section-title';
+      ttl.textContent = title;
+      sec.appendChild(ttl);
+
+      const list = document.createElement('div');
+      list.className = 'result-pairs-list';
+
+      results.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'result-pair-row ' + (item.correct ? 'correct' : 'wrong');
+
+        const pair = item.pair.join(' · ');
+        const ans = item.answer.join(' · ');
+
+        row.innerHTML = `
+          <div style="font-size:10px;color:var(--muted);min-width:16px;font-weight:700;">${idx + 1}</div>
+          <div class="result-pair-letters">${pair}</div>
+          <div class="result-pair-answer">Tu respuesta: ${ans || '—'}</div>
+          <div class="result-pair-icon">${item.correct ? '✓' : '✕'}</div>
+        `;
+        list.appendChild(row);
+      });
+
+      sec.appendChild(list);
+      return sec;
+    }
+
+    function memoAction() {
+      if (memo.phase === 'config') {
+        if (!memo.includeEdges && !memo.includeCorners) return;
+
+        memo.generatedEdges = memo.includeEdges
+          ? generatePairs(MEMO_EDGES_LETTERS, edgePairForbidden, memo.edgeCount)
+          : [];
+
+        memo.generatedCorners = memo.includeCorners
+          ? generatePairs(MEMO_CORNERS_LETTERS, cornerPairForbidden, memo.cornerCount)
+          : [];
+
+        memo.edgeResults = [];
+        memo.cornerResults = [];
+
+        memo.phase = (memo.includeCorners && memo.generatedCorners.length) ? 'memo-corners' : 'memo-edges';
+        renderMemo();
+        return;
+      }
+
+      if (memo.phase === 'memo-corners') {
+        if (memo.includeEdges && memo.generatedEdges.length) {
+          memo.phase = 'memo-edges';
+          renderMemo();
+        } else {
+          memo.phase = 'test-corners';
+          initMemoTest('corners');
+          renderMemo();
+        }
+        return;
+      }
+
+      if (memo.phase === 'memo-edges') {
+        memo.phase = 'test-edges';
+        initMemoTest('edges');
+        renderMemo();
+        return;
+      }
+
+      if (memo.phase === 'result') {
+        memo.phase = 'config';
+        renderMemo();
+      }
     }
 
     if ('serviceWorker' in navigator) {
