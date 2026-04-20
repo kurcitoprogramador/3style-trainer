@@ -247,8 +247,6 @@
     .btn-main-icon.memo-icon {
       font-size: 11px;
       letter-spacing: .01em;
-      line-height: 1.1;
-      text-align: center;
     }
 
     .status-dot {
@@ -391,8 +389,13 @@
       transition: opacity .18s ease, transform .12s ease;
     }
 
-    .btn-start:disabled { opacity: .4; }
-    .btn-start:not(:disabled):active { transform: scale(.99); }
+    .btn-start:disabled {
+      opacity: .4;
+    }
+
+    .btn-start:not(:disabled):active {
+      transform: scale(.99);
+    }
 
     /* Practice */
     #screen-practice {
@@ -656,23 +659,9 @@
       text-transform: uppercase;
     }
 
-    .memo-phase-badge.memo {
-      background: rgba(147,181,157,0.15);
-      color: var(--success);
-      border: 1px solid rgba(147,181,157,0.25);
-    }
-
-    .memo-phase-badge.test {
-      background: rgba(201,184,122,0.15);
-      color: var(--warn);
-      border: 1px solid rgba(201,184,122,0.25);
-    }
-
-    .memo-phase-badge.done {
-      background: rgba(238,242,248,0.1);
-      color: var(--accent);
-      border: 1px solid rgba(238,242,248,0.2);
-    }
+    .memo-phase-badge.memo { background: rgba(147,181,157,0.15); color: var(--success); border: 1px solid rgba(147,181,157,0.25); }
+    .memo-phase-badge.test { background: rgba(201,184,122,0.15); color: var(--warn); border: 1px solid rgba(201,184,122,0.25); }
+    .memo-phase-badge.done { background: rgba(238,242,248,0.1); color: var(--accent); border: 1px solid rgba(238,242,248,0.2); }
 
     .memo-body {
       flex: 1;
@@ -685,6 +674,7 @@
       padding-bottom: 140px;
     }
 
+    /* Config screen */
     .memo-config-section {
       display: flex;
       flex-direction: column;
@@ -767,18 +757,7 @@
 
     .memo-length-btn:active { transform: scale(.93); }
 
-    .memo-note {
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .memo-note b { color: var(--text-soft); }
-
+    /* Memo display */
     .memo-section-title {
       font-size: 11px;
       font-weight: 700;
@@ -827,6 +806,7 @@
       font-size: 16px;
     }
 
+    /* Test screen */
     .test-progress-row {
       display: flex;
       align-items: center;
@@ -946,6 +926,7 @@
       font-weight: 600;
     }
 
+    /* Hidden keyboard trick */
     #memoKeyboardCapture {
       position: fixed;
       top: -200px;
@@ -961,6 +942,7 @@
       font-size: 16px;
     }
 
+    /* Result screen */
     .result-section {
       display: flex;
       flex-direction: column;
@@ -1041,6 +1023,7 @@
       font-weight: 600;
     }
 
+    /* Memo footer */
     .memo-footer {
       position: fixed;
       left: 0;
@@ -1060,6 +1043,7 @@
       font-weight: 600;
     }
 
+    /* Helpers */
     .animate-in {
       animation: slideUp .32s ease both;
     }
@@ -1067,11 +1051,6 @@
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes blink {
-      0%,100% { opacity: 1; }
-      50% { opacity: 0; }
     }
 
     ::-webkit-scrollbar { width: 4px; }
@@ -1197,7 +1176,7 @@
     </div>
   </div>
 
-  <!-- DONE -->
+  <!-- DONE (3style) -->
   <div class="screen hidden" id="screen-done">
     <div class="done-card glass">
       <div class="done-title">Sesión completa</div>
@@ -1211,7 +1190,7 @@
     </div>
   </div>
 
-  <!-- MEMO -->
+  <!-- ===================== MEMO M2 OP SCREEN ===================== -->
   <div class="screen hidden" id="screen-memo">
     <div class="memo-header">
       <button class="btn-back glass btn-plain" onclick="memoGoHome()">‹</button>
@@ -1219,7 +1198,9 @@
       <div class="memo-phase-badge memo" id="memoPhaseBadge">CONFIG</div>
     </div>
 
-    <div class="memo-body" id="memoBody"></div>
+    <div class="memo-body" id="memoBody">
+      <!-- content injected by JS -->
+    </div>
 
     <div class="memo-footer" id="memoFooter">
       <div class="memo-footer-hint" id="memoFooterHint"></div>
@@ -1229,7 +1210,7 @@
 
   <script>
     /* ============================================================
-       3STYLE DATA
+       ORIGINAL 3STYLE DATA & LOGIC (unchanged)
     ============================================================ */
     const URLS = {
       UF: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=405240257&single=true&output=csv',
@@ -1241,102 +1222,56 @@
     const STORAGE_KEY = '3style_dataset_v2';
     const SET_ORDER = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
 
-    const DB = {
-      UF: null,
-      UFR: null,
-      PAIRS: null,
-      PARITY: null,
-      UF_PAIRS: {},
-      UFR_PAIRS: {},
-    };
+    const DB = { UF: null, UFR: null, PAIRS: null, PARITY: null, UF_PAIRS: {}, UFR_PAIRS: {} };
 
     let currentType = 'UF';
     let selectedSets = new Set();
 
     let session = {
-      queue: [],
-      done: 0,
-      total: 0,
-      current: null,
-      phase: 'idle',
-      timerRunning: false,
-      timerSecs: 0,
-      timerInterval: null,
-      type: 'UF',
-      sets: [],
+      queue: [], done: 0, total: 0, current: null, phase: 'idle',
+      timerRunning: false, timerSecs: 0, timerInterval: null, type: 'UF', sets: [],
     };
 
     function cleanKey(value) {
       const s = String(value ?? '').trim().toUpperCase();
-      if (!s || ['NAN', 'NONE', 'NULL', 'UNDEFINED'].includes(s)) return null;
+      if (!s || ['NAN','NONE','NULL','UNDEFINED'].includes(s)) return null;
       return s;
     }
-
     function cleanValue(value) {
       const s = String(value ?? '').trim();
       if (!s) return null;
-      if (['NAN', 'NONE', 'NULL', 'UNDEFINED'].includes(s.toUpperCase())) return null;
+      if (['NAN','NONE','NULL','UNDEFINED'].includes(s.toUpperCase())) return null;
       return s;
     }
 
     function parseCSV(text) {
       const rows = [];
-      let row = [];
-      let cell = '';
-      let inQuotes = false;
-
+      let row = [], cell = '', inQuotes = false;
       for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const next = text[i + 1];
-
-        if (char === '"') {
-          if (inQuotes && next === '"') {
-            cell += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
-          continue;
-        }
-
-        if (char === ',' && !inQuotes) {
-          row.push(cell);
-          cell = '';
-          continue;
-        }
-
+        const char = text[i], next = text[i+1];
+        if (char === '"') { if (inQuotes && next === '"') { cell += '"'; i++; } else { inQuotes = !inQuotes; } continue; }
+        if (char === ',' && !inQuotes) { row.push(cell); cell = ''; continue; }
         if ((char === '\n' || char === '\r') && !inQuotes) {
           if (char === '\r' && next === '\n') i++;
           row.push(cell);
           if (row.some(c => String(c).trim() !== '')) rows.push(row);
-          row = [];
-          cell = '';
-          continue;
+          row = []; cell = ''; continue;
         }
-
         cell += char;
       }
-
       row.push(cell);
       if (row.some(c => String(c).trim() !== '')) rows.push(row);
-
       if (!rows.length) return { headers: [], rows: [] };
-
-      return {
-        headers: rows[0].map(v => String(v ?? '').trim()),
-        rows: rows.slice(1),
-      };
+      return { headers: rows[0].map(v => String(v ?? '').trim()), rows: rows.slice(1) };
     }
 
     function buildMatrix(csv) {
       const { headers, rows } = csv;
       const mat = {};
-
       for (let ci = 1; ci < headers.length; ci++) {
         const col = cleanKey(headers[ci]);
         if (!col) continue;
         if (!mat[col]) mat[col] = {};
-
         for (const row of rows) {
           const rowKey = cleanKey(row[0]);
           if (!rowKey) continue;
@@ -1344,7 +1279,6 @@
           if (val) mat[col][rowKey] = val;
         }
       }
-
       return mat;
     }
 
@@ -1359,11 +1293,9 @@
 
     function sortSets(sets) {
       return [...sets].sort((a, b) => {
-        const ia = SET_ORDER.indexOf(a);
-        const ib = SET_ORDER.indexOf(b);
+        const ia = SET_ORDER.indexOf(a), ib = SET_ORDER.indexOf(b);
         if (ia === -1 && ib === -1) return a.localeCompare(b);
-        if (ia === -1) return 1;
-        if (ib === -1) return -1;
+        if (ia === -1) return 1; if (ib === -1) return -1;
         return ia - ib;
       });
     }
@@ -1375,16 +1307,7 @@
     }
 
     function saveDatasetToLocal() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          UF: DB.UF,
-          UFR: DB.UFR,
-          PAIRS: DB.PAIRS,
-          PARITY: DB.PARITY,
-          UF_PAIRS: DB.UF_PAIRS,
-          UFR_PAIRS: DB.UFR_PAIRS,
-        }));
-      } catch (_) {}
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ UF: DB.UF, UFR: DB.UFR, PAIRS: DB.PAIRS, PARITY: DB.PARITY, UF_PAIRS: DB.UF_PAIRS, UFR_PAIRS: DB.UFR_PAIRS })); } catch (_) {}
     }
 
     function loadDatasetFromLocal() {
@@ -1392,18 +1315,11 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return false;
         const data = JSON.parse(raw);
-
-        DB.UF = data.UF || null;
-        DB.UFR = data.UFR || null;
-        DB.PAIRS = data.PAIRS || null;
-        DB.PARITY = data.PARITY || null;
-        DB.UF_PAIRS = data.UF_PAIRS || {};
-        DB.UFR_PAIRS = data.UFR_PAIRS || {};
-
+        DB.UF = data.UF || null; DB.UFR = data.UFR || null;
+        DB.PAIRS = data.PAIRS || null; DB.PARITY = data.PARITY || null;
+        DB.UF_PAIRS = data.UF_PAIRS || {}; DB.UFR_PAIRS = data.UFR_PAIRS || {};
         return !!(DB.UF || DB.UFR);
-      } catch (_) {
-        return false;
-      }
+      } catch (_) { return false; }
     }
 
     function showScreen(name) {
@@ -1412,200 +1328,95 @@
       if (el) el.classList.remove('hidden');
     }
 
-    function setLoadingMsg(text) {
-      const el = document.getElementById('loadingMsg');
-      if (el) el.textContent = text;
-    }
-
+    function setLoadingMsg(text) { const el = document.getElementById('loadingMsg'); if (el) el.textContent = text; }
     function setStatus(ok, text) {
-      const dot = document.getElementById('statusDot');
-      const label = document.getElementById('statusText');
-
-      dot.classList.remove('ok', 'err');
-      dot.classList.add(ok ? 'ok' : 'err');
-      label.textContent = text;
+      const dot = document.getElementById('statusDot'), label = document.getElementById('statusText');
+      dot.classList.remove('ok','err'); dot.classList.add(ok ? 'ok' : 'err'); label.textContent = text;
     }
 
     async function loadData() {
-      showScreen('loading');
-      setLoadingMsg('descargando datos...');
-      setStatus(false, 'cargando datos...');
-
+      showScreen('loading'); setLoadingMsg('descargando datos...'); setStatus(false, 'cargando datos...');
       try {
-        const [ufText, ufrText, pairsText, parityText] = await Promise.all([
-          fetchCSV(URLS.UF),
-          fetchCSV(URLS.UFR),
-          fetchCSV(URLS.PAIRS),
-          fetchCSV(URLS.PARITY),
-        ]);
-
-        setLoadingMsg('procesando uf...');
-        DB.UF = buildMatrix(parseCSV(ufText));
-
-        setLoadingMsg('procesando ufr...');
-        DB.UFR = buildMatrix(parseCSV(ufrText));
-
-        setLoadingMsg('procesando letter pairs...');
-        DB.PAIRS = buildMatrix(parseCSV(pairsText));
-
-        setLoadingMsg('procesando parity...');
-        DB.PARITY = buildMatrix(parseCSV(parityText));
-
-        DB.UF_PAIRS = buildPairs(DB.UF);
-        DB.UFR_PAIRS = buildPairs(DB.UFR);
-
-        if (!Object.keys(DB.UF_PAIRS).length && !Object.keys(DB.UFR_PAIRS).length) {
-          throw new Error('No se encontraron pares válidos');
-        }
-
-        saveDatasetToLocal();
-        setStatus(true, 'datos listos');
-        showScreen('home');
+        const [ufText, ufrText, pairsText, parityText] = await Promise.all([fetchCSV(URLS.UF), fetchCSV(URLS.UFR), fetchCSV(URLS.PAIRS), fetchCSV(URLS.PARITY)]);
+        setLoadingMsg('procesando uf...'); DB.UF = buildMatrix(parseCSV(ufText));
+        setLoadingMsg('procesando ufr...'); DB.UFR = buildMatrix(parseCSV(ufrText));
+        setLoadingMsg('procesando letter pairs...'); DB.PAIRS = buildMatrix(parseCSV(pairsText));
+        setLoadingMsg('procesando parity...'); DB.PARITY = buildMatrix(parseCSV(parityText));
+        DB.UF_PAIRS = buildPairs(DB.UF); DB.UFR_PAIRS = buildPairs(DB.UFR);
+        if (!Object.keys(DB.UF_PAIRS).length && !Object.keys(DB.UFR_PAIRS).length) throw new Error('No se encontraron pares válidos');
+        saveDatasetToLocal(); setStatus(true, 'datos listos'); showScreen('home');
       } catch (e) {
         const localOk = loadDatasetFromLocal();
-
-        if (localOk) {
-          setStatus(true, 'modo local');
-          showScreen('home');
-          return;
-        }
-
-        document.getElementById('errorMsg').textContent =
-          'No se pudo cargar: ' + e.message + '. Verifica los links CSV y tu conexión.';
-        setStatus(false, 'error al cargar');
-        showScreen('error');
+        if (localOk) { setStatus(true, 'modo local'); showScreen('home'); return; }
+        document.getElementById('errorMsg').textContent = 'No se pudo cargar: ' + e.message + '. Verifica los links CSV y tu conexión.';
+        setStatus(false, 'error al cargar'); showScreen('error');
       }
     }
 
     function openSetSelector(type) {
-      currentType = type;
-      selectedSets.clear();
-
+      currentType = type; selectedSets.clear();
       document.getElementById('setsTypeBadge').textContent = type;
-
       const pairs = type === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
-      const grid = document.getElementById('setsGrid');
-      grid.innerHTML = '';
-
+      const grid = document.getElementById('setsGrid'); grid.innerHTML = '';
       const sets = sortSets(Object.keys(pairs));
       sets.forEach(setName => {
         const chip = document.createElement('button');
-        chip.className = 'set-chip btn-plain animate-in';
-        chip.textContent = setName;
-        chip.onclick = () => toggleSet(setName, chip);
-        grid.appendChild(chip);
+        chip.className = 'set-chip btn-plain animate-in'; chip.textContent = setName;
+        chip.onclick = () => toggleSet(setName, chip); grid.appendChild(chip);
       });
-
-      updateSetFooter();
-      showScreen('sets');
+      updateSetFooter(); showScreen('sets');
     }
 
     function toggleSet(setName, chip) {
-      if (selectedSets.has(setName)) {
-        selectedSets.delete(setName);
-        chip.classList.remove('selected');
-      } else {
-        selectedSets.add(setName);
-        chip.classList.add('selected');
-      }
+      if (selectedSets.has(setName)) { selectedSets.delete(setName); chip.classList.remove('selected'); }
+      else { selectedSets.add(setName); chip.classList.add('selected'); }
       updateSetFooter();
     }
 
     function updateSetFooter() {
       const pairs = currentType === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
       let total = 0;
-
-      selectedSets.forEach(setName => {
-        total += (pairs[setName] || []).length;
-      });
-
-      document.getElementById('selectedCount').textContent =
-        `${selectedSets.size} set${selectedSets.size !== 1 ? 's' : ''} · ${total} pares`;
-
+      selectedSets.forEach(setName => { total += (pairs[setName] || []).length; });
+      document.getElementById('selectedCount').textContent = `${selectedSets.size} set${selectedSets.size !== 1 ? 's' : ''} · ${total} pares`;
       document.getElementById('btnStart').disabled = selectedSets.size === 0 || total === 0;
     }
 
     function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+      for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [array[i],array[j]] = [array[j],array[i]]; }
     }
 
     function startPractice() {
       const pairs = currentType === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
       const allPairs = [];
-
-      selectedSets.forEach(setName => {
-        (pairs[setName] || []).forEach(target => {
-          allPairs.push([setName, target]);
-        });
-      });
-
-      if (!allPairs.length) {
-        alert('No hay pares disponibles para esos sets.');
-        return;
-      }
-
+      selectedSets.forEach(setName => { (pairs[setName] || []).forEach(target => { allPairs.push([setName, target]); }); });
+      if (!allPairs.length) { alert('No hay pares disponibles para esos sets.'); return; }
       shuffle(allPairs);
-
-      session = {
-        queue: allPairs,
-        done: 0,
-        total: allPairs.length,
-        current: null,
-        phase: 'idle',
-        timerRunning: false,
-        timerSecs: 0,
-        timerInterval: null,
-        type: currentType,
-        sets: sortSets([...selectedSets]),
-      };
-
-      resetTimer();
-      showScreen('practice');
-      nextPair();
+      session = { queue: allPairs, done: 0, total: allPairs.length, current: null, phase: 'idle', timerRunning: false, timerSecs: 0, timerInterval: null, type: currentType, sets: sortSets([...selectedSets]) };
+      resetTimer(); showScreen('practice'); nextPair();
     }
 
     function lookupAlg(a, b) {
       const mat = session.type === 'UF' ? DB.UF : DB.UFR;
-      const col = cleanKey(a);
-      const row = cleanKey(b);
+      const col = cleanKey(a), row = cleanKey(b);
       if (!col || !row) return null;
       return mat?.[col]?.[row] || null;
     }
 
     function lookupWord(a, b) {
-      const col = cleanKey(a);
-      const row = cleanKey(b);
+      const col = cleanKey(a), row = cleanKey(b);
       if (!col || !row) return null;
       return DB.PAIRS?.[col]?.[row] || null;
     }
 
     function nextPair() {
-      if (!session.queue.length) {
-        finishSession();
-        return;
-      }
-
-      session.current = session.queue.shift();
-      session.done += 1;
-      session.phase = 'idle';
-
+      if (!session.queue.length) { finishSession(); return; }
+      session.current = session.queue.shift(); session.done += 1; session.phase = 'idle';
       const [a, b] = session.current;
       document.getElementById('letterA').textContent = a;
       document.getElementById('letterB').textContent = b;
       document.getElementById('wordValue').textContent = lookupWord(a, b) || '—';
-
-      const box = document.getElementById('algBox');
-      const text = document.getElementById('algText');
-      const hint = document.getElementById('algHint');
-
-      box.classList.remove('revealed');
-      text.classList.remove('visible');
-      text.textContent = '';
-      hint.style.display = 'block';
-
+      const box = document.getElementById('algBox'), text = document.getElementById('algText'), hint = document.getElementById('algHint');
+      box.classList.remove('revealed'); text.classList.remove('visible'); text.textContent = ''; hint.style.display = 'block';
       const pct = ((session.done - 1) / session.total) * 100;
       document.getElementById('progressFill').style.width = `${pct}%`;
       document.getElementById('progressLabel').textContent = `${session.done} / ${session.total}`;
@@ -1614,79 +1425,51 @@
 
     function revealAlg() {
       if (!session.current) return;
-
       session.phase = 'revealed';
       const [a, b] = session.current;
       const alg = lookupAlg(a, b);
-
-      const box = document.getElementById('algBox');
-      const text = document.getElementById('algText');
-      const hint = document.getElementById('algHint');
-
-      box.classList.add('revealed');
-      hint.style.display = 'none';
+      const box = document.getElementById('algBox'), text = document.getElementById('algText'), hint = document.getElementById('algHint');
+      box.classList.add('revealed'); hint.style.display = 'none';
       text.textContent = alg || 'No disponible';
       requestAnimationFrame(() => text.classList.add('visible'));
-
       document.getElementById('tapHintText').textContent = 'TAP · SIGUIENTE';
     }
 
     function flashScreen() {
       const flash = document.getElementById('tapFlash');
-      flash.classList.add('flash');
-      setTimeout(() => flash.classList.remove('flash'), 80);
+      flash.classList.add('flash'); setTimeout(() => flash.classList.remove('flash'), 80);
     }
 
     function handleTap(e) {
       if (e.target.closest('.practice-back') || e.target.closest('.btn-timer')) return;
       flashScreen();
-      if (session.phase === 'idle') {
-        revealAlg();
-      } else {
-        nextPair();
-      }
+      if (session.phase === 'idle') { revealAlg(); } else { nextPair(); }
     }
 
     function toggleTimer(e) {
       e.stopPropagation();
-      if (session.timerRunning) pauseTimer();
-      else startTimer();
+      if (session.timerRunning) { pauseTimer(); } else { startTimer(); }
     }
 
     function startTimer() {
       if (session.timerRunning) return;
       session.timerRunning = true;
-      const btn = document.getElementById('btnTimer');
-      btn.classList.add('running');
-      btn.textContent = '⏸ ' + formatTime(session.timerSecs);
-      session.timerInterval = setInterval(() => {
-        session.timerSecs++;
-        btn.textContent = '⏸ ' + formatTime(session.timerSecs);
-      }, 1000);
+      const btn = document.getElementById('btnTimer'); btn.classList.add('running'); btn.textContent = '⏸ ' + formatTime(session.timerSecs);
+      session.timerInterval = setInterval(() => { session.timerSecs++; btn.textContent = '⏸ ' + formatTime(session.timerSecs); }, 1000);
     }
 
     function pauseTimer() {
-      session.timerRunning = false;
-      clearInterval(session.timerInterval);
-      session.timerInterval = null;
-      const btn = document.getElementById('btnTimer');
-      btn.classList.remove('running');
-      btn.textContent = '▶ ' + formatTime(session.timerSecs);
+      session.timerRunning = false; clearInterval(session.timerInterval); session.timerInterval = null;
+      const btn = document.getElementById('btnTimer'); btn.classList.remove('running'); btn.textContent = '▶ ' + formatTime(session.timerSecs);
     }
 
     function resetTimer() {
-      clearInterval(session.timerInterval);
-      session.timerInterval = null;
-      session.timerRunning = false;
-      session.timerSecs = 0;
-      const btn = document.getElementById('btnTimer');
-      btn.classList.remove('running');
-      btn.textContent = '▶ timer';
+      clearInterval(session.timerInterval); session.timerInterval = null; session.timerRunning = false; session.timerSecs = 0;
+      const btn = document.getElementById('btnTimer'); btn.classList.remove('running'); btn.textContent = '▶ timer';
     }
 
     function formatTime(totalSecs) {
-      const m = Math.floor(totalSecs / 60).toString().padStart(2, '0');
-      const s = (totalSecs % 60).toString().padStart(2, '0');
+      const m = Math.floor(totalSecs/60).toString().padStart(2,'0'), s = (totalSecs%60).toString().padStart(2,'0');
       return `${m}:${s}`;
     }
 
@@ -1694,61 +1477,39 @@
       pauseTimer();
       document.getElementById('progressFill').style.width = '100%';
       document.getElementById('doneTime').textContent = formatTime(session.timerSecs);
-      document.getElementById('doneStats').textContent =
-        `${session.total} pares · ${session.type} · sets: ${session.sets.join(', ')}`;
+      document.getElementById('doneStats').textContent = `${session.total} pares · ${session.type} · sets: ${session.sets.join(', ')}`;
       showScreen('done');
     }
 
     function repeatSession() {
       const pairs = session.type === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
       const allPairs = [];
-
-      session.sets.forEach(setName => {
-        (pairs[setName] || []).forEach(target => {
-          allPairs.push([setName, target]);
-        });
-      });
-
+      session.sets.forEach(setName => { (pairs[setName] || []).forEach(target => { allPairs.push([setName, target]); }); });
       shuffle(allPairs);
-
-      session.queue = allPairs;
-      session.done = 0;
-      session.total = allPairs.length;
-      session.current = null;
-      session.phase = 'idle';
-      resetTimer();
-      showScreen('practice');
-      nextPair();
+      session.queue = allPairs; session.done = 0; session.total = allPairs.length; session.current = null; session.phase = 'idle';
+      resetTimer(); showScreen('practice'); nextPair();
     }
 
-    function confirmBack(e) {
-      e.stopPropagation();
-      pauseTimer();
-      showScreen('home');
-    }
+    function confirmBack(e) { e.stopPropagation(); pauseTimer(); showScreen('home'); }
 
     /* ============================================================
-       MEMO M2 OP
+       MEMO M2 OP — DATA
     ============================================================ */
-    const MEMO_EDGES_LETTERS = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
+
+    const MEMO_EDGES_LETTERS   = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
     const MEMO_CORNERS_LETTERS = ['F','I','C','E','A','J','T','B','M','K','G','P','N','H','D','S','Q','L','O','R','U'];
 
     const EDGE_FORBIDDEN_PAIRS = [
-      ['A','B'], ['D','C'], ['F','E'], ['O','P'],
-      ['I','J'], ['K','L'], ['M','N'], ['G','H'],
-      ['R','Q'], ['S','T'], ['Y','U']
+      ['A','B'],['D','C'],['F','E'],['O','P'],['I','J'],['K','L'],['M','N'],['G','H'],['R','Q'],['S','T'],['Y','U']
     ];
 
     const CORNER_FORBIDDEN_GROUPS = [
-      ['A','B','C'],
-      ['D','E','F'],
-      ['I','G','H'],
-      ['M','N','O'],
-      ['P','Q','R'],
-      ['S','T','U'],
-      ['K','L','J']
+      ['A','B','C'],['D','E','F'],['I','G','H'],['M','N','O'],['P','Q','R'],['S','T','U'],['K','L','J']
     ];
 
+    // ── CAMBIO PRINCIPAL: defaults y rangos ──────────────────────
+    // edgeCount  = 10 letras  (rango 10–11)
+    // cornerCount =  6 letras  (rango  6–7)
     let memo = {
       phase: 'config',
       includeEdges: true,
@@ -1758,43 +1519,87 @@
       generatedEdges: [],
       generatedCorners: [],
       testPhase: null,
+      testQueue: [],
+      testAnswers: [],
       currentTestPairIdx: 0,
       currentLetterIdx: 0,
       typedLetters: [],
-      edgeResults: [],
-      cornerResults: [],
     };
 
+    /* ---- Generador de secuencias ---- */
+
     function edgePairForbidden(a, b) {
-      if (a === b) return true;
-      return EDGE_FORBIDDEN_PAIRS.some(([x, y]) =>
-        (x === a && y === b) || (x === b && y === a)
+      return EDGE_FORBIDDEN_PAIRS.some(([x,y]) =>
+        (x===a && y===b) || (x===b && y===a) || a===b
       );
     }
 
     function cornerPairForbidden(a, b) {
       if (a === b) return true;
-      return CORNER_FORBIDDEN_GROUPS.some(group => group.includes(a) && group.includes(b));
+      return CORNER_FORBIDDEN_GROUPS.some(grp => grp.includes(a) && grp.includes(b));
     }
 
-    function generatePairs(letters, forbiddenFn, count) {
+    // Genera `count` letras individuales (no pares) sin restricciones consecutivas
+    // y las agrupa en pares de 2 para el test.
+    // count debe ser par (10 u 11 → usamos floor(count/2) pares, descartamos impar)
+    function generateEdgePairs(letterCount) {
+      const letters = MEMO_EDGES_LETTERS;
       const pairs = [];
       let attempts = 0;
-
-      while (pairs.length < count && attempts < 5000) {
+      const pairCount = Math.floor(letterCount / 2);
+      while (pairs.length < pairCount && attempts < 2000) {
         attempts++;
         const a = letters[Math.floor(Math.random() * letters.length)];
         const b = letters[Math.floor(Math.random() * letters.length)];
-        if (forbiddenFn(a, b)) continue;
-
+        if (edgePairForbidden(a, b)) continue;
         const last = pairs[pairs.length - 1];
         if (last && last[0] === a && last[1] === b) continue;
-
         pairs.push([a, b]);
       }
-
+      // Si letterCount es impar (11), añade una letra extra como par incompleto
+      if (letterCount % 2 === 1 && pairs.length === pairCount) {
+        let extra = null, att2 = 0;
+        while (!extra && att2 < 500) {
+          att2++;
+          const a = letters[Math.floor(Math.random() * letters.length)];
+          const lastPair = pairs[pairs.length - 1];
+          if (lastPair && lastPair[1] === a) continue;
+          extra = a;
+        }
+        if (extra) pairs.push([extra, null]);
+      }
       return pairs;
     }
+
+    function generateCornerPairs(letterCount) {
+      const letters = MEMO_CORNERS_LETTERS;
+      const pairs = [];
+      let attempts = 0;
+      const pairCount = Math.floor(letterCount / 2);
+      while (pairs.length < pairCount && attempts < 2000) {
+        attempts++;
+        const a = letters[Math.floor(Math.random() * letters.length)];
+        const b = letters[Math.floor(Math.random() * letters.length)];
+        if (cornerPairForbidden(a, b)) continue;
+        const last = pairs[pairs.length - 1];
+        if (last && last[0] === a && last[1] === b) continue;
+        pairs.push([a, b]);
+      }
+      if (letterCount % 2 === 1 && pairs.length === pairCount) {
+        let extra = null, att2 = 0;
+        while (!extra && att2 < 500) {
+          att2++;
+          const a = letters[Math.floor(Math.random() * letters.length)];
+          const lastPair = pairs[pairs.length - 1];
+          if (lastPair && lastPair[1] === a) continue;
+          extra = a;
+        }
+        if (extra) pairs.push([extra, null]);
+      }
+      return pairs;
+    }
+
+    /* ---- Renderizado del módulo ---- */
 
     function openMemo() {
       memo.phase = 'config';
@@ -1807,148 +1612,144 @@
       showScreen('home');
     }
 
-    function setMemoBadge(text, mode) {
-      const badge = document.getElementById('memoPhaseBadge');
-      badge.className = 'memo-phase-badge ' + mode;
-      badge.textContent = text;
-    }
-
     function renderMemo() {
       const body = document.getElementById('memoBody');
       const footer = document.getElementById('memoFooter');
+      const badge = document.getElementById('memoPhaseBadge');
+      const headerTitle = document.getElementById('memoHeaderTitle');
       const btn = document.getElementById('memoBtnAction');
       const hint = document.getElementById('memoFooterHint');
-      const headerTitle = document.getElementById('memoHeaderTitle');
 
       body.innerHTML = '';
-      btn.style.display = 'flex';
-      btn.disabled = false;
-      footer.style.display = 'flex';
+      badge.className = 'memo-phase-badge';
 
       if (memo.phase === 'config') {
-        setMemoBadge('CONFIG', 'memo');
+        badge.classList.add('memo'); badge.textContent = 'CONFIG';
         headerTitle.textContent = 'Memo M2 OP';
         hint.textContent = '';
         btn.textContent = 'Generar secuencia';
-        renderMemoConfig(body);
-        return;
-      }
+        btn.disabled = false;
+        btn.style.display = 'flex';
+        footer.style.display = 'flex';
+        renderConfig(body);
 
-      if (memo.phase === 'memo-corners') {
-        setMemoBadge('MEMO', 'memo');
+      } else if (memo.phase === 'memo-corners') {
+        badge.classList.add('memo'); badge.textContent = 'MEMO';
         headerTitle.textContent = 'Memoriza esquinas';
-        hint.textContent = 'Memorízalas bien antes de continuar';
-        btn.textContent = memo.includeEdges ? 'Listo → ver aristas' : 'Listo → empezar test';
-        renderMemoDisplay(body, memo.generatedCorners, 'Esquinas');
-        return;
-      }
+        hint.textContent = 'Cuando las tengas memorizadas, continúa';
+        btn.textContent = 'Listo, ver aristas →';
+        btn.disabled = false;
+        btn.style.display = 'flex';
+        footer.style.display = 'flex';
+        renderMemoDisplay(body, memo.generatedCorners, 'Esquinas', false);
 
-      if (memo.phase === 'memo-edges') {
-        setMemoBadge('MEMO', 'memo');
+      } else if (memo.phase === 'memo-edges') {
+        badge.classList.add('memo'); badge.textContent = 'MEMO';
         headerTitle.textContent = 'Memoriza aristas';
-        hint.textContent = 'Memorízalas bien antes de continuar';
-        btn.textContent = 'Listo → empezar test';
-        renderMemoDisplay(body, memo.generatedEdges, 'Aristas');
-        return;
-      }
+        hint.textContent = 'Cuando las tengas memorizadas, continúa';
+        btn.textContent = 'Listo, empezar test →';
+        btn.disabled = false;
+        btn.style.display = 'flex';
+        footer.style.display = 'flex';
+        renderMemoDisplay(body, memo.generatedEdges, 'Aristas', false);
 
-      if (memo.phase === 'test-edges') {
-        setMemoBadge('TEST', 'test');
+      } else if (memo.phase === 'test-edges') {
+        badge.classList.add('test'); badge.textContent = 'TEST';
         headerTitle.textContent = 'Ejecuta aristas';
         hint.textContent = 'Escribe cada letra de memoria';
         btn.style.display = 'none';
-        renderMemoTest(body, 'edges');
-        return;
-      }
+        footer.style.display = 'flex';
+        renderTestScreen(body, 'edges');
 
-      if (memo.phase === 'test-corners') {
-        setMemoBadge('TEST', 'test');
+      } else if (memo.phase === 'test-corners') {
+        badge.classList.add('test'); badge.textContent = 'TEST';
         headerTitle.textContent = 'Ejecuta esquinas';
         hint.textContent = 'Escribe cada letra de memoria';
         btn.style.display = 'none';
-        renderMemoTest(body, 'corners');
-        return;
-      }
+        footer.style.display = 'flex';
+        renderTestScreen(body, 'corners');
 
-      if (memo.phase === 'result') {
-        setMemoBadge('RESULTADO', 'done');
+      } else if (memo.phase === 'result') {
+        badge.classList.add('done'); badge.textContent = 'RESULTADO';
         headerTitle.textContent = 'Resultado';
         hint.textContent = '';
+        btn.style.display = 'flex';
         btn.textContent = 'Nueva sesión';
-        renderMemoResult(body);
+        btn.disabled = false;
+        footer.style.display = 'flex';
+        renderResult(body);
       }
     }
 
-    function renderMemoConfig(body) {
+    function renderConfig(body) {
+      // Tipo de piezas
       const typeSection = document.createElement('div');
       typeSection.className = 'memo-config-section';
-      typeSection.innerHTML = '<div class="memo-config-label">¿Qué practicar?</div>';
+      typeSection.innerHTML = `<div class="memo-config-label">¿Qué practicar?</div>`;
 
-      const row = document.createElement('div');
-      row.className = 'memo-toggle-row';
+      const toggleRow = document.createElement('div');
+      toggleRow.className = 'memo-toggle-row';
 
       const btnEdges = document.createElement('button');
       btnEdges.className = 'memo-toggle btn-plain' + (memo.includeEdges ? ' active' : '');
       btnEdges.textContent = 'Aristas';
-      btnEdges.onclick = () => {
-        memo.includeEdges = !memo.includeEdges;
-        renderMemo();
-      };
+      btnEdges.onclick = () => { memo.includeEdges = !memo.includeEdges; renderMemo(); };
 
       const btnCorners = document.createElement('button');
       btnCorners.className = 'memo-toggle btn-plain' + (memo.includeCorners ? ' active' : '');
       btnCorners.textContent = 'Esquinas';
-      btnCorners.onclick = () => {
-        memo.includeCorners = !memo.includeCorners;
-        renderMemo();
-      };
+      btnCorners.onclick = () => { memo.includeCorners = !memo.includeCorners; renderMemo(); };
 
-      row.appendChild(btnEdges);
-      row.appendChild(btnCorners);
-      typeSection.appendChild(row);
+      toggleRow.appendChild(btnEdges);
+      toggleRow.appendChild(btnCorners);
+      typeSection.appendChild(toggleRow);
       body.appendChild(typeSection);
 
+      // ── CAMBIO: rangos ajustados ─────────────────────────────
+      // Aristas: 10–11 letras  |  Esquinas: 6–7 letras
+
       if (memo.includeEdges) {
-        const sec = document.createElement('div');
-        sec.className = 'memo-config-section';
-        sec.innerHTML = '<div class="memo-config-label">Letras de aristas</div>';
-        sec.appendChild(makeMemoLengthRow('edge', memo.edgeCount, 10, 11));
-        body.appendChild(sec);
+        const edgeSection = document.createElement('div');
+        edgeSection.className = 'memo-config-section';
+        edgeSection.innerHTML = `<div class="memo-config-label">Letras de aristas</div>`;
+        edgeSection.appendChild(makeLengthRow('edge', memo.edgeCount, 10, 11));
+        body.appendChild(edgeSection);
       }
 
       if (memo.includeCorners) {
-        const sec = document.createElement('div');
-        sec.className = 'memo-config-section';
-        sec.innerHTML = '<div class="memo-config-label">Letras de esquinas</div>';
-        sec.appendChild(makeMemoLengthRow('corner', memo.cornerCount, 6, 7));
-        body.appendChild(sec);
+        const cornerSection = document.createElement('div');
+        cornerSection.className = 'memo-config-section';
+        cornerSection.innerHTML = `<div class="memo-config-label">Letras de esquinas</div>`;
+        cornerSection.appendChild(makeLengthRow('corner', memo.cornerCount, 6, 7));
+        body.appendChild(cornerSection);
       }
 
-      const note = document.createElement('div');
-      note.className = 'memo-note';
-      note.innerHTML = `
-        <b>¿Cómo funciona?</b><br>
-        1. Memorizas <b>esquinas</b> → luego <b>aristas</b><br>
-        2. Test: escribes <b>aristas</b> de memoria → luego <b>esquinas</b><br>
+      // Info card
+      const info = document.createElement('div');
+      info.style.cssText = 'padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.03);font-size:13px;color:var(--muted);line-height:1.6;';
+      info.innerHTML = `
+        <b style="color:var(--text-soft);display:block;margin-bottom:6px;">¿Cómo funciona?</b>
+        1. Memorizas <b style="color:var(--text-soft);">esquinas</b> → luego <b style="color:var(--text-soft);">aristas</b><br>
+        2. Test: escribes aristas de memoria → luego esquinas<br>
         3. Ves tu resultado letra por letra
       `;
-      body.appendChild(note);
+      body.appendChild(info);
     }
 
-    function makeMemoLengthRow(type, val, min, max) {
+    function makeLengthRow(type, val, min, max) {
       const row = document.createElement('div');
       row.className = 'memo-length-row';
 
       const label = document.createElement('div');
       label.className = 'memo-length-label';
-      label.textContent = 'Cantidad';
+      label.textContent = 'Número de letras';
 
       const btnMinus = document.createElement('button');
       btnMinus.className = 'memo-length-btn btn-plain';
       btnMinus.textContent = '−';
       btnMinus.onclick = () => {
-        if (type === 'edge') memo.edgeCount = Math.max(min, memo.edgeCount - 1);
-        else memo.cornerCount = Math.max(min, memo.cornerCount - 1);
+        if (type === 'edge') { memo.edgeCount = Math.max(min, memo.edgeCount - 1); }
+        else { memo.cornerCount = Math.max(min, memo.cornerCount - 1); }
         renderMemo();
       };
 
@@ -1960,8 +1761,8 @@
       btnPlus.className = 'memo-length-btn btn-plain';
       btnPlus.textContent = '+';
       btnPlus.onclick = () => {
-        if (type === 'edge') memo.edgeCount = Math.min(max, memo.edgeCount + 1);
-        else memo.cornerCount = Math.min(max, memo.cornerCount + 1);
+        if (type === 'edge') { memo.edgeCount = Math.min(max, memo.edgeCount + 1); }
+        else { memo.cornerCount = Math.min(max, memo.cornerCount + 1); }
         renderMemo();
       };
 
@@ -1972,153 +1773,200 @@
       return row;
     }
 
-    function renderMemoDisplay(body, pairs, title) {
+    function renderMemoDisplay(body, pairs, title, hideLetters) {
+      // Contar letras reales (el último par puede tener null como segunda letra)
+      let letterCount = 0;
+      pairs.forEach(([a, b]) => { letterCount += a ? 1 : 0; letterCount += b ? 1 : 0; });
+
       const titleEl = document.createElement('div');
       titleEl.className = 'memo-section-title';
-      titleEl.textContent = `${title} — ${pairs.length} pares`;
+      titleEl.textContent = title + ' — ' + letterCount + ' letras';
       body.appendChild(titleEl);
 
       const grid = document.createElement('div');
       grid.className = 'memo-pairs-grid';
 
+      let letterIdx = 0;
       pairs.forEach(([a, b], idx) => {
         const chip = document.createElement('div');
         chip.className = 'memo-pair-chip';
-        chip.innerHTML = `
-          <span class="pair-num">${idx + 1}</span>
-          <span class="pair-letters">${a}<span class="memo-pair-sep"> · </span>${b}</span>
-        `;
+
+        const num = document.createElement('span');
+        num.className = 'pair-num';
+        // Mostrar rango de letras que cubre este par
+        const from = letterIdx + 1;
+        const to = letterIdx + (a ? 1 : 0) + (b ? 1 : 0);
+        num.textContent = b ? `${from}-${to}` : `${from}`;
+        letterIdx = to;
+
+        const letters = document.createElement('span');
+        letters.className = 'pair-letters';
+        if (hideLetters) {
+          letters.innerHTML = `<span style="color:rgba(255,255,255,0.15)">? · ?</span>`;
+        } else if (b) {
+          letters.innerHTML = `${a}<span class="memo-pair-sep"> · </span>${b}`;
+        } else {
+          letters.innerHTML = `${a}<span class="memo-pair-sep"> · </span><span style="color:rgba(255,255,255,0.3)">—</span>`;
+        }
+
+        chip.appendChild(num);
+        chip.appendChild(letters);
         grid.appendChild(chip);
       });
 
       body.appendChild(grid);
     }
 
-    function initMemoTest(phase) {
+    /* ---- TEST ---- */
+
+    function initTest(phase) {
       const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
       memo.testPhase = phase;
+      memo.testQueue = pairs.map(p => [...p]);
+      memo.typedLetters = pairs.map(([a, b]) => b ? ['', ''] : ['']);
+      memo.testAnswers = [];
       memo.currentTestPairIdx = 0;
       memo.currentLetterIdx = 0;
-      memo.typedLetters = pairs.map(() => ['', '']);
       focusKeyboard();
     }
 
-    function renderMemoTest(body, phase) {
+    function renderTestScreen(body, phase) {
       const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
-      const totalLetters = pairs.length * 2;
-      const answeredLetters = memo.currentTestPairIdx * 2 + memo.currentLetterIdx;
+      let totalLetters = 0;
+      pairs.forEach(([a, b]) => { totalLetters += a ? 1 : 0; totalLetters += b ? 1 : 0; });
+      let answeredLetters = 0;
+      for (let i = 0; i < memo.currentTestPairIdx; i++) {
+        const [a, b] = pairs[i];
+        answeredLetters += a ? 1 : 0; answeredLetters += b ? 1 : 0;
+      }
+      answeredLetters += memo.currentLetterIdx;
 
+      // Progress
       const progressRow = document.createElement('div');
       progressRow.className = 'test-progress-row';
-
-      const bar = document.createElement('div');
-      bar.className = 'test-progress-bar';
-
-      const fill = document.createElement('div');
-      fill.className = 'test-progress-fill';
-      fill.style.width = `${totalLetters ? (answeredLetters / totalLetters) * 100 : 0}%`;
-
-      const lbl = document.createElement('div');
-      lbl.className = 'test-progress-label';
-      lbl.textContent = `${Math.min(memo.currentTestPairIdx + 1, pairs.length)} / ${pairs.length}`;
-
+      const bar = document.createElement('div'); bar.className = 'test-progress-bar';
+      const fill = document.createElement('div'); fill.className = 'test-progress-fill';
+      fill.style.width = `${(answeredLetters/totalLetters)*100}%`;
       bar.appendChild(fill);
-      progressRow.appendChild(bar);
-      progressRow.appendChild(lbl);
+      const lbl = document.createElement('div'); lbl.className = 'test-progress-label';
+      lbl.textContent = `${answeredLetters} / ${totalLetters}`;
+      progressRow.appendChild(bar); progressRow.appendChild(lbl);
       body.appendChild(progressRow);
 
-      const phaseLbl = document.createElement('div');
-      phaseLbl.className = 'test-phase-label';
-      phaseLbl.textContent = phase === 'edges' ? '· ARISTAS ·' : '· ESQUINAS ·';
-      body.appendChild(phaseLbl);
+      const phaseLabel = document.createElement('div');
+      phaseLabel.className = 'test-phase-label';
+      phaseLabel.textContent = phase === 'edges' ? '· ARISTAS ·' : '· ESQUINAS ·';
+      body.appendChild(phaseLabel);
 
+      // Grid de slots
       const grid = document.createElement('div');
       grid.className = 'test-inputs-grid';
 
       pairs.forEach(([correctA, correctB], idx) => {
-        const typedA = memo.typedLetters[idx][0];
-        const typedB = memo.typedLetters[idx][1];
+        const typedA = (memo.typedLetters[idx] || [])[0] || '';
+        const typedB = correctB ? ((memo.typedLetters[idx] || [])[1] || '') : null;
         const isActive = idx === memo.currentTestPairIdx;
         const isDone = idx < memo.currentTestPairIdx;
 
         const slot = document.createElement('div');
         slot.className = 'test-pair-slot';
 
-        const num = document.createElement('div');
-        num.className = 'test-pair-num';
-        num.textContent = idx + 1;
+        const numEl = document.createElement('div');
+        numEl.className = 'test-pair-num';
+        numEl.textContent = idx + 1;
 
         const wrap = document.createElement('div');
         wrap.className = 'test-input-wrap';
-
         if (isActive) wrap.classList.add('active-slot');
         if (isDone) {
-          const ok = typedA.toUpperCase() === correctA && typedB.toUpperCase() === correctB;
-          wrap.classList.add(ok ? 'correct' : 'wrong');
+          const pairCorrect = typedA.toUpperCase() === correctA && (correctB ? typedB.toUpperCase() === correctB : true);
+          wrap.classList.add(pairCorrect ? 'correct' : 'wrong');
         }
 
         const boxA = document.createElement('div');
         boxA.className = 'test-letter-box';
-
         if (isDone) {
           boxA.classList.add(typedA.toUpperCase() === correctA ? 'correct-letter' : 'wrong-letter');
           boxA.textContent = typedA || '_';
-        } else if (isActive) {
+        } else if (isActive && memo.currentLetterIdx === 0) {
           if (typedA) {
             boxA.textContent = typedA;
-          } else if (memo.currentLetterIdx === 0) {
-            boxA.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
           } else {
-            boxA.classList.add('empty');
-            boxA.textContent = '_';
+            boxA.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
           }
+        } else if (isActive && memo.currentLetterIdx === 1) {
+          boxA.textContent = typedA || '_';
         } else {
           boxA.classList.add('empty');
           boxA.textContent = '_';
         }
 
-        const sep = document.createElement('div');
-        sep.className = 'test-sep';
-        sep.textContent = '·';
+        wrap.appendChild(boxA);
 
-        const boxB = document.createElement('div');
-        boxB.className = 'test-letter-box';
+        if (correctB) {
+          const sep = document.createElement('div');
+          sep.className = 'test-sep';
+          sep.textContent = '·';
 
-        if (isDone) {
-          boxB.classList.add(typedB.toUpperCase() === correctB ? 'correct-letter' : 'wrong-letter');
-          boxB.textContent = typedB || '_';
-        } else if (isActive && memo.currentLetterIdx === 1) {
-          if (typedB) {
-            boxB.textContent = typedB;
+          const boxB = document.createElement('div');
+          boxB.className = 'test-letter-box';
+          if (isDone) {
+            boxB.classList.add(typedB.toUpperCase() === correctB ? 'correct-letter' : 'wrong-letter');
+            boxB.textContent = typedB || '_';
+          } else if (isActive && memo.currentLetterIdx === 1) {
+            if (typedB) {
+              boxB.textContent = typedB;
+            } else {
+              boxB.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
+            }
+          } else if (isActive && memo.currentLetterIdx === 0) {
+            boxB.classList.add('empty');
+            boxB.textContent = '_';
           } else {
-            boxB.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
+            boxB.classList.add('empty');
+            boxB.textContent = '_';
           }
+
+          wrap.appendChild(sep);
+          wrap.appendChild(boxB);
         } else {
-          boxB.classList.add('empty');
-          boxB.textContent = '_';
+          // Par incompleto (letra impar final)
+          const sep = document.createElement('div');
+          sep.className = 'test-sep';
+          sep.textContent = '·';
+          const boxEmpty = document.createElement('div');
+          boxEmpty.className = 'test-letter-box empty';
+          boxEmpty.style.opacity = '0.3';
+          boxEmpty.textContent = '—';
+          wrap.appendChild(sep);
+          wrap.appendChild(boxEmpty);
         }
 
-        wrap.appendChild(boxA);
-        wrap.appendChild(sep);
-        wrap.appendChild(boxB);
-
-        slot.appendChild(num);
-        slot.appendChild(wrap);
+        slot.appendChild(numEl); slot.appendChild(wrap);
         grid.appendChild(slot);
       });
 
+      if (!document.getElementById('blinkStyle')) {
+        const style = document.createElement('style');
+        style.id = 'blinkStyle';
+        style.textContent = '@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }';
+        document.head.appendChild(style);
+      }
+
       body.appendChild(grid);
 
+      // Hint de respuesta correcta si el último par fue incorrecto
       if (memo.currentTestPairIdx > 0) {
         const lastIdx = memo.currentTestPairIdx - 1;
         const [ca, cb] = pairs[lastIdx];
-        const ta = memo.typedLetters[lastIdx][0];
-        const tb = memo.typedLetters[lastIdx][1];
-
-        if (!(ta.toUpperCase() === ca && tb.toUpperCase() === cb)) {
+        const ta = (memo.typedLetters[lastIdx] || [])[0] || '';
+        const tb = cb ? ((memo.typedLetters[lastIdx] || [])[1] || '') : null;
+        const wasCorrect = ta.toUpperCase() === ca && (cb ? tb.toUpperCase() === cb : true);
+        if (!wasCorrect) {
           const hint = document.createElement('div');
           hint.className = 'test-answer-row';
-          hint.innerHTML = `<span>Par ${lastIdx + 1} correcto:</span><span style="font-size:18px;font-weight:800;color:var(--success)">${ca} · ${cb}</span>`;
+          const correctDisplay = cb ? `${ca} · ${cb}` : `${ca}`;
+          hint.innerHTML = `<span>Par ${lastIdx+1} correcto:</span><span style="font-size:18px;font-weight:800;color:var(--success)">${correctDisplay}</span>`;
           body.appendChild(hint);
         }
       }
@@ -2131,173 +1979,242 @@
       }, 50);
     }
 
+    /* Teclado invisible */
     function focusKeyboard() {
       const inp = document.getElementById('memoKeyboardCapture');
       inp.value = '';
       inp.focus();
       inp.oninput = handleMemoInput;
-      setTimeout(() => inp.focus(), 50);
+      inp.onkeydown = handleMemoKeydown;
     }
 
     function blurKeyboard() {
       const inp = document.getElementById('memoKeyboardCapture');
-      inp.blur();
       inp.oninput = null;
+      inp.onkeydown = null;
+      inp.blur();
+    }
+
+    function handleMemoKeydown(e) {
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        handleMemoBackspace();
+      }
     }
 
     function handleMemoInput(e) {
-      const raw = String(e.target.value || '').toUpperCase().replace(/[^A-Z]/g, '');
+      const inp = document.getElementById('memoKeyboardCapture');
+      const raw = inp.value.toUpperCase().replace(/[^A-Z]/g, '');
+      inp.value = '';
       if (!raw) return;
+      const letter = raw[raw.length - 1];
+      handleMemoLetter(letter);
+    }
 
-      const typedChar = raw.slice(-1);
-      e.target.value = '';
+    function handleMemoLetter(letter) {
+      const phase = memo.testPhase;
+      const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      const validLetters = phase === 'edges' ? MEMO_EDGES_LETTERS : MEMO_CORNERS_LETTERS;
 
-      const pairs = memo.testPhase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      if (!validLetters.includes(letter)) return;
       if (memo.currentTestPairIdx >= pairs.length) return;
 
-      memo.typedLetters[memo.currentTestPairIdx][memo.currentLetterIdx] = typedChar;
+      const [correctA, correctB] = pairs[memo.currentTestPairIdx];
 
       if (memo.currentLetterIdx === 0) {
-        memo.currentLetterIdx = 1;
-      } else {
-        memo.currentLetterIdx = 0;
-        memo.currentTestPairIdx += 1;
-
-        if (memo.currentTestPairIdx >= pairs.length) {
-          finishMemoTest();
+        memo.typedLetters[memo.currentTestPairIdx][0] = letter;
+        if (!correctB) {
+          // Par de solo una letra → avanzar directamente
+          memo.testAnswers.push({
+            pair: [correctA, null],
+            answer: [letter, null],
+            correct: letter.toUpperCase() === correctA,
+          });
+          memo.currentTestPairIdx++;
+          memo.currentLetterIdx = 0;
+          checkTestComplete(pairs, phase);
           return;
         }
+        memo.currentLetterIdx = 1;
+        renderMemo();
+        focusKeyboard();
+      } else {
+        memo.typedLetters[memo.currentTestPairIdx][1] = letter;
+        const typedA = memo.typedLetters[memo.currentTestPairIdx][0];
+        memo.testAnswers.push({
+          pair: [correctA, correctB],
+          answer: [typedA, letter],
+          correct: typedA.toUpperCase() === correctA && letter.toUpperCase() === correctB,
+        });
+        memo.currentTestPairIdx++;
+        memo.currentLetterIdx = 0;
+        checkTestComplete(pairs, phase);
       }
+    }
 
+    function checkTestComplete(pairs, phase) {
+      if (memo.currentTestPairIdx >= pairs.length) {
+        if (phase === 'edges' && memo.includeCorners && memo.generatedCorners.length > 0) {
+          memo.phase = 'test-corners';
+          memo._edgeAnswers = memo.testAnswers;
+          initTest('corners');
+          renderMemo();
+        } else {
+          if (!memo._edgeAnswers) memo._edgeAnswers = [];
+          if (memo.testPhase === 'corners') memo._cornerAnswers = memo.testAnswers;
+          else { memo._edgeAnswers = memo.testAnswers; memo._cornerAnswers = []; }
+          memo.phase = 'result';
+          blurKeyboard();
+          renderMemo();
+        }
+        return;
+      }
       renderMemo();
       focusKeyboard();
     }
 
-    function finishMemoTest() {
-      const pairs = memo.testPhase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
-      const results = pairs.map((pair, idx) => {
-        const answer = memo.typedLetters[idx];
-        const correct = answer[0].toUpperCase() === pair[0] && answer[1].toUpperCase() === pair[1];
-        return { pair, answer, correct };
-      });
+    function handleMemoBackspace() {
+      const phase = memo.testPhase;
+      const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
 
-      if (memo.testPhase === 'edges') {
-        memo.edgeResults = results;
-        if (memo.includeCorners && memo.generatedCorners.length) {
-          memo.phase = 'test-corners';
-          initMemoTest('corners');
-          renderMemo();
+      if (memo.currentLetterIdx === 1) {
+        memo.typedLetters[memo.currentTestPairIdx][1] = '';
+        memo.currentLetterIdx = 1;
+        renderMemo();
+        focusKeyboard();
+      } else if (memo.currentLetterIdx === 0 && memo.currentTestPairIdx > 0) {
+        memo.currentTestPairIdx--;
+        const [, prevB] = pairs[memo.currentTestPairIdx];
+        memo.currentLetterIdx = prevB ? 1 : 0;
+        if (prevB) {
+          memo.typedLetters[memo.currentTestPairIdx][1] = '';
+        } else {
+          memo.typedLetters[memo.currentTestPairIdx][0] = '';
+        }
+        memo.testAnswers.pop();
+        renderMemo();
+        focusKeyboard();
+      }
+    }
+
+    function renderResult(body) {
+      const edgeAnswers = memo._edgeAnswers || [];
+      const cornerAnswers = memo._cornerAnswers || [];
+      const allAnswers = [...edgeAnswers, ...cornerAnswers];
+      const correct = allAnswers.filter(a => a.correct).length;
+      const total = allAnswers.length;
+      const pct = total > 0 ? Math.round((correct/total)*100) : 0;
+
+      const scoreCard = document.createElement('div');
+      scoreCard.className = 'result-score-card glass';
+      scoreCard.innerHTML = `
+        <div class="result-score-num" style="color:${pct===100?'var(--success)':pct>=70?'var(--warn)':'var(--danger)'}">${pct}%</div>
+        <div class="result-score-label">${correct} / ${total} pares correctos</div>
+      `;
+      body.appendChild(scoreCard);
+
+      if (edgeAnswers.length > 0) {
+        const section = document.createElement('div');
+        section.className = 'result-section';
+        section.innerHTML = `<div class="result-section-title">Aristas</div>`;
+        const list = document.createElement('div');
+        list.className = 'result-pairs-list';
+        edgeAnswers.forEach(({ pair, answer, correct }, idx) => {
+          const row = document.createElement('div');
+          row.className = 'result-pair-row ' + (correct ? 'correct' : 'wrong');
+          const [ca, cb] = pair;
+          const [ta, tb] = answer;
+          const pairDisplay = cb ? `${ca}<span style="color:rgba(255,255,255,0.2)"> · </span>${cb}` : `${ca}`;
+          const answerDisplay = cb
+            ? `Escribiste: <b style="color:var(--danger)">${ta||'_'} · ${tb||'_'}</b>`
+            : `Escribiste: <b style="color:var(--danger)">${ta||'_'}</b>`;
+          row.innerHTML = `
+            <div class="result-pair-num" style="font-size:11px;color:var(--muted);min-width:18px">${idx+1}</div>
+            <div class="result-pair-letters">${pairDisplay}</div>
+            <div class="result-pair-answer">${correct ? 'Correcto' : answerDisplay}</div>
+            <div class="result-pair-icon">${correct ? '✓' : '✗'}</div>
+          `;
+          list.appendChild(row);
+        });
+        section.appendChild(list);
+        body.appendChild(section);
+      }
+
+      if (cornerAnswers.length > 0) {
+        const section = document.createElement('div');
+        section.className = 'result-section';
+        section.innerHTML = `<div class="result-section-title">Esquinas</div>`;
+        const list = document.createElement('div');
+        list.className = 'result-pairs-list';
+        cornerAnswers.forEach(({ pair, answer, correct }, idx) => {
+          const row = document.createElement('div');
+          row.className = 'result-pair-row ' + (correct ? 'correct' : 'wrong');
+          const [ca, cb] = pair;
+          const [ta, tb] = answer;
+          const pairDisplay = cb ? `${ca}<span style="color:rgba(255,255,255,0.2)"> · </span>${cb}` : `${ca}`;
+          const answerDisplay = cb
+            ? `Escribiste: <b style="color:var(--danger)">${ta||'_'} · ${tb||'_'}</b>`
+            : `Escribiste: <b style="color:var(--danger)">${ta||'_'}</b>`;
+          row.innerHTML = `
+            <div class="result-pair-num" style="font-size:11px;color:var(--muted);min-width:18px">${idx+1}</div>
+            <div class="result-pair-letters">${pairDisplay}</div>
+            <div class="result-pair-answer">${correct ? 'Correcto' : answerDisplay}</div>
+            <div class="result-pair-icon">${correct ? '✓' : '✗'}</div>
+          `;
+          list.appendChild(row);
+        });
+        section.appendChild(list);
+        body.appendChild(section);
+      }
+    }
+
+    /* ---- Acción del botón principal del memo ---- */
+    function memoAction() {
+      const btn = document.getElementById('memoBtnAction');
+      btn.style.display = 'flex';
+
+      if (memo.phase === 'config') {
+        if (!memo.includeEdges && !memo.includeCorners) {
+          alert('Selecciona al menos aristas o esquinas.');
           return;
         }
-      } else {
-        memo.cornerResults = results;
-      }
+        memo.generatedEdges = memo.includeEdges ? generateEdgePairs(memo.edgeCount) : [];
+        memo.generatedCorners = memo.includeCorners ? generateCornerPairs(memo.cornerCount) : [];
+        memo._edgeAnswers = [];
+        memo._cornerAnswers = [];
 
-      memo.phase = 'result';
-      blurKeyboard();
-      renderMemo();
-    }
-
-    function renderMemoResult(body) {
-      const all = [...memo.edgeResults, ...memo.cornerResults];
-      const total = all.length;
-      const correct = all.filter(x => x.correct).length;
-      const pct = total ? Math.round((correct / total) * 100) : 0;
-
-      const card = document.createElement('div');
-      card.className = 'result-score-card';
-      card.innerHTML = `
-        <div class="result-score-num">${pct}%</div>
-        <div class="result-score-label">${correct} de ${total} pares correctos</div>
-      `;
-      body.appendChild(card);
-
-      if (memo.edgeResults.length) {
-        body.appendChild(renderResultSection('Aristas', memo.edgeResults));
-      }
-
-      if (memo.cornerResults.length) {
-        body.appendChild(renderResultSection('Esquinas', memo.cornerResults));
-      }
-    }
-
-    function renderResultSection(title, results) {
-      const sec = document.createElement('div');
-      sec.className = 'result-section';
-
-      const ttl = document.createElement('div');
-      ttl.className = 'result-section-title';
-      ttl.textContent = title;
-      sec.appendChild(ttl);
-
-      const list = document.createElement('div');
-      list.className = 'result-pairs-list';
-
-      results.forEach((item, idx) => {
-        const row = document.createElement('div');
-        row.className = 'result-pair-row ' + (item.correct ? 'correct' : 'wrong');
-
-        const pair = item.pair.join(' · ');
-        const ans = item.answer.join(' · ');
-
-        row.innerHTML = `
-          <div style="font-size:10px;color:var(--muted);min-width:16px;font-weight:700;">${idx + 1}</div>
-          <div class="result-pair-letters">${pair}</div>
-          <div class="result-pair-answer">Tu respuesta: ${ans || '—'}</div>
-          <div class="result-pair-icon">${item.correct ? '✓' : '✕'}</div>
-        `;
-        list.appendChild(row);
-      });
-
-      sec.appendChild(list);
-      return sec;
-    }
-
-    function memoAction() {
-      if (memo.phase === 'config') {
-        if (!memo.includeEdges && !memo.includeCorners) return;
-
-        memo.generatedEdges = memo.includeEdges
-          ? generatePairs(MEMO_EDGES_LETTERS, edgePairForbidden, memo.edgeCount)
-          : [];
-
-        memo.generatedCorners = memo.includeCorners
-          ? generatePairs(MEMO_CORNERS_LETTERS, cornerPairForbidden, memo.cornerCount)
-          : [];
-
-        memo.edgeResults = [];
-        memo.cornerResults = [];
-
-        memo.phase = (memo.includeCorners && memo.generatedCorners.length) ? 'memo-corners' : 'memo-edges';
-        renderMemo();
-        return;
-      }
-
-      if (memo.phase === 'memo-corners') {
-        if (memo.includeEdges && memo.generatedEdges.length) {
+        if (memo.includeCorners && memo.generatedCorners.length > 0) {
+          memo.phase = 'memo-corners';
+        } else {
           memo.phase = 'memo-edges';
-          renderMemo();
+        }
+        renderMemo();
+
+      } else if (memo.phase === 'memo-corners') {
+        if (memo.includeEdges && memo.generatedEdges.length > 0) {
+          memo.phase = 'memo-edges';
         } else {
           memo.phase = 'test-corners';
-          initMemoTest('corners');
-          renderMemo();
+          initTest('corners');
         }
-        return;
-      }
-
-      if (memo.phase === 'memo-edges') {
-        memo.phase = 'test-edges';
-        initMemoTest('edges');
         renderMemo();
-        return;
-      }
 
-      if (memo.phase === 'result') {
+      } else if (memo.phase === 'memo-edges') {
+        memo.phase = 'test-edges';
+        initTest('edges');
+        renderMemo();
+
+      } else if (memo.phase === 'result') {
         memo.phase = 'config';
+        memo._edgeAnswers = [];
+        memo._cornerAnswers = [];
         renderMemo();
       }
     }
 
+    /* ============================================================
+       SERVICE WORKER
+    ============================================================ */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
