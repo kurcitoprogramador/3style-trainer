@@ -20,24 +20,19 @@
       --surface-3: #1c212b;
       --border: rgba(255, 255, 255, 0.08);
       --border-strong: rgba(255, 255, 255, 0.14);
-
       --text: #f4f7fb;
       --text-soft: #cbd3df;
       --muted: #8c96a6;
-
       --accent: #e9edf5;
       --success: #93b59d;
       --danger: #d49494;
       --warn: #c9b87a;
-
       --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.34);
       --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.22);
-
       --radius-xl: 30px;
       --radius-lg: 22px;
       --radius-md: 16px;
       --radius-sm: 12px;
-
       --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -389,18 +384,11 @@
       transition: opacity .18s ease, transform .12s ease;
     }
 
-    .btn-start:disabled {
-      opacity: .4;
-    }
-
-    .btn-start:not(:disabled):active {
-      transform: scale(.99);
-    }
+    .btn-start:disabled { opacity: .4; }
+    .btn-start:not(:disabled):active { transform: scale(.99); }
 
     /* Practice */
-    #screen-practice {
-      padding: 18px 18px 28px;
-    }
+    #screen-practice { padding: 18px 18px 28px; }
 
     .practice-shell {
       width: 100%;
@@ -491,9 +479,7 @@
       line-height: 1;
     }
 
-    .pair-separator {
-      color: rgba(255,255,255,0.12);
-    }
+    .pair-separator { color: rgba(255,255,255,0.12); }
 
     .word-label {
       font-size: 12px;
@@ -575,9 +561,7 @@
       transition: background .08s ease;
     }
 
-    .tap-flash.flash {
-      background: rgba(255,255,255,0.04);
-    }
+    .tap-flash.flash { background: rgba(255,255,255,0.04); }
 
     /* Done */
     #screen-done { gap: 18px; }
@@ -659,9 +643,10 @@
       text-transform: uppercase;
     }
 
-    .memo-phase-badge.memo { background: rgba(147,181,157,0.15); color: var(--success); border: 1px solid rgba(147,181,157,0.25); }
-    .memo-phase-badge.test { background: rgba(201,184,122,0.15); color: var(--warn); border: 1px solid rgba(201,184,122,0.25); }
-    .memo-phase-badge.done { background: rgba(238,242,248,0.1); color: var(--accent); border: 1px solid rgba(238,242,248,0.2); }
+    .memo-phase-badge.memo  { background: rgba(147,181,157,0.15); color: var(--success); border: 1px solid rgba(147,181,157,0.25); }
+    .memo-phase-badge.test  { background: rgba(201,184,122,0.15); color: var(--warn);    border: 1px solid rgba(201,184,122,0.25); }
+    .memo-phase-badge.done  { background: rgba(238,242,248,0.1);  color: var(--accent);  border: 1px solid rgba(238,242,248,0.2); }
+    .memo-phase-badge.config{ background: rgba(140,150,166,0.15); color: var(--muted);   border: 1px solid rgba(140,150,166,0.2); }
 
     .memo-body {
       flex: 1;
@@ -674,7 +659,6 @@
       padding-bottom: 140px;
     }
 
-    /* Config screen */
     .memo-config-section {
       display: flex;
       flex-direction: column;
@@ -690,10 +674,7 @@
       margin-bottom: 2px;
     }
 
-    .memo-toggle-row {
-      display: flex;
-      gap: 10px;
-    }
+    .memo-toggle-row { display: flex; gap: 10px; }
 
     .memo-toggle {
       flex: 1;
@@ -706,6 +687,7 @@
       font-weight: 700;
       text-align: center;
       transition: all .15s ease;
+      cursor: pointer;
     }
 
     .memo-toggle.active {
@@ -753,11 +735,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
     }
 
     .memo-length-btn:active { transform: scale(.93); }
 
-    /* Memo display */
     .memo-section-title {
       font-size: 11px;
       font-weight: 700;
@@ -766,11 +748,7 @@
       color: var(--muted);
     }
 
-    .memo-pairs-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .memo-pairs-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .memo-pair-chip {
       padding: 10px 16px;
@@ -797,16 +775,127 @@
       letter-spacing: .04em;
     }
 
-    .memo-pair-chip .pair-letters {
-      margin-top: 8px;
+    .memo-pair-chip .pair-letters { margin-top: 8px; }
+    .memo-pair-sep { color: rgba(255,255,255,0.2); font-size: 16px; }
+
+    /* ── Countdown ── */
+    .countdown-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      padding-top: 8px;
     }
 
-    .memo-pair-sep {
-      color: rgba(255,255,255,0.2);
-      font-size: 16px;
+    .countdown-ring-wrap {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      flex-shrink: 0;
     }
 
-    /* Test screen */
+    .countdown-ring-wrap svg {
+      position: absolute;
+      top: 0; left: 0;
+    }
+
+    .countdown-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .countdown-num {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -.06em;
+      line-height: 1;
+    }
+
+    .countdown-of {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+
+    .countdown-current-pair {
+      font-size: 58px;
+      font-weight: 800;
+      letter-spacing: -.07em;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 68px;
+      animation: popIn .18s ease both;
+    }
+
+    .countdown-pair-sep { color: rgba(255,255,255,0.18); font-size: 40px; }
+
+    .countdown-chips-wrap {
+      width: 100%;
+    }
+
+    .countdown-chips-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .countdown-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .cchip {
+      padding: 7px 13px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      color: rgba(255,255,255,0.18);
+      transition: color .2s, background .2s, border-color .2s;
+    }
+
+    .cchip.revealed {
+      color: var(--text);
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .cchip.active {
+      color: var(--accent);
+      background: rgba(255,255,255,0.13);
+      border-color: rgba(255,255,255,0.26);
+    }
+
+    .btn-skip {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+
+    .btn-skip:active { transform: scale(.99); color: var(--text); }
+
+    /* Test */
     .test-progress-row {
       display: flex;
       align-items: center;
@@ -845,11 +934,7 @@
       text-align: center;
     }
 
-    .test-inputs-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
+    .test-inputs-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 
     .test-pair-slot {
       display: flex;
@@ -877,20 +962,9 @@
       transition: border-color .15s, background .15s;
     }
 
-    .test-input-wrap.active-slot {
-      border-color: rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.09);
-    }
-
-    .test-input-wrap.correct {
-      border-color: rgba(147,181,157,0.5);
-      background: rgba(147,181,157,0.08);
-    }
-
-    .test-input-wrap.wrong {
-      border-color: rgba(212,148,148,0.5);
-      background: rgba(212,148,148,0.08);
-    }
+    .test-input-wrap.active-slot  { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.09); }
+    .test-input-wrap.correct       { border-color: rgba(147,181,157,0.5);  background: rgba(147,181,157,0.08); }
+    .test-input-wrap.wrong         { border-color: rgba(212,148,148,0.5);  background: rgba(212,148,148,0.08); }
 
     .test-letter-box {
       width: 22px;
@@ -904,18 +978,11 @@
       color: var(--text);
     }
 
-    .test-letter-box.empty {
-      color: rgba(255,255,255,0.15);
-    }
-
+    .test-letter-box.empty        { color: rgba(255,255,255,0.15); }
     .test-letter-box.correct-letter { color: var(--success); }
-    .test-letter-box.wrong-letter { color: var(--danger); }
+    .test-letter-box.wrong-letter   { color: var(--danger); }
 
-    .test-sep {
-      font-size: 12px;
-      color: rgba(255,255,255,0.15);
-      font-weight: 700;
-    }
+    .test-sep { font-size: 12px; color: rgba(255,255,255,0.15); font-weight: 700; }
 
     .test-answer-row {
       display: flex;
@@ -926,7 +993,6 @@
       font-weight: 600;
     }
 
-    /* Hidden keyboard trick */
     #memoKeyboardCapture {
       position: fixed;
       top: -200px;
@@ -942,12 +1008,8 @@
       font-size: 16px;
     }
 
-    /* Result screen */
-    .result-section {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    /* Result */
+    .result-section { display: flex; flex-direction: column; gap: 10px; }
 
     .result-section-title {
       font-size: 11px;
@@ -957,11 +1019,7 @@
       color: var(--muted);
     }
 
-    .result-pairs-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .result-pairs-list { display: flex; flex-direction: column; gap: 6px; }
 
     .result-pair-row {
       display: flex;
@@ -973,32 +1031,12 @@
       background: rgba(255,255,255,0.03);
     }
 
-    .result-pair-row.correct {
-      border-color: rgba(147,181,157,0.3);
-      background: rgba(147,181,157,0.06);
-    }
+    .result-pair-row.correct { border-color: rgba(147,181,157,0.3); background: rgba(147,181,157,0.06); }
+    .result-pair-row.wrong   { border-color: rgba(212,148,148,0.3); background: rgba(212,148,148,0.06); }
 
-    .result-pair-row.wrong {
-      border-color: rgba(212,148,148,0.3);
-      background: rgba(212,148,148,0.06);
-    }
-
-    .result-pair-letters {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -.04em;
-      min-width: 52px;
-    }
-
-    .result-pair-answer {
-      font-size: 13px;
-      color: var(--muted);
-      flex: 1;
-    }
-
-    .result-pair-icon {
-      font-size: 16px;
-    }
+    .result-pair-letters { font-size: 20px; font-weight: 800; letter-spacing: -.04em; min-width: 52px; }
+    .result-pair-answer  { font-size: 13px; color: var(--muted); flex: 1; }
+    .result-pair-icon    { font-size: 16px; }
 
     .result-score-card {
       padding: 20px;
@@ -1011,19 +1049,9 @@
       gap: 6px;
     }
 
-    .result-score-num {
-      font-size: 48px;
-      font-weight: 800;
-      letter-spacing: -.07em;
-    }
+    .result-score-num   { font-size: 48px; font-weight: 800; letter-spacing: -.07em; }
+    .result-score-label { font-size: 13px; color: var(--muted); font-weight: 600; }
 
-    .result-score-label {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    /* Memo footer */
     .memo-footer {
       position: fixed;
       left: 0;
@@ -1044,14 +1072,19 @@
     }
 
     /* Helpers */
-    .animate-in {
-      animation: slideUp .32s ease both;
-    }
+    .animate-in { animation: slideUp .32s ease both; }
 
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.82); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 999px; }
@@ -1061,6 +1094,7 @@
       .sets-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .pair-display { font-size: 52px; }
       .home-title { font-size: 36px; }
+      .countdown-current-pair { font-size: 46px; }
     }
   </style>
 </head>
@@ -1129,11 +1163,9 @@
       <div class="sets-title">Elige sets</div>
       <div class="sets-type-badge" id="setsTypeBadge">UF</div>
     </div>
-
     <div class="sets-grid-wrap">
       <div class="sets-grid" id="setsGrid"></div>
     </div>
-
     <div class="sets-footer">
       <div class="selected-count" id="selectedCount">0 sets · 0 pares</div>
       <button class="btn-start btn-plain" id="btnStart" disabled onclick="startPractice()">Empezar práctica</button>
@@ -1145,32 +1177,26 @@
     <div class="practice-shell glass">
       <div class="practice-topbar">
         <button class="practice-back glass btn-plain" onclick="confirmBack(event)">‹</button>
-
         <div class="progress-wrap">
           <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
           </div>
           <div class="progress-label" id="progressLabel">0 / 0</div>
         </div>
-
         <button class="btn-timer btn-plain" id="btnTimer" onclick="toggleTimer(event)">▶ timer</button>
       </div>
-
       <div class="practice-center">
         <div class="pair-display">
           <span id="letterA">A</span>
           <span class="pair-separator">·</span>
           <span id="letterB">B</span>
         </div>
-
         <div class="word-label">Palabra asociada</div>
         <div class="word-value" id="wordValue">—</div>
-
         <div class="alg-box" id="algBox">
           <div class="alg-hint" id="algHint">Tap para revelar</div>
           <div class="alg-text" id="algText"></div>
         </div>
-
         <div class="tap-hint" id="tapHintText">TAP · REVEAL</div>
       </div>
     </div>
@@ -1182,7 +1208,6 @@
       <div class="done-title">Sesión completa</div>
       <div class="done-time" id="doneTime">00:00</div>
       <div class="done-stats" id="doneStats">0 pares</div>
-
       <div class="done-actions">
         <button class="btn-start btn-plain" onclick="repeatSession()">Repetir sesión</button>
         <button class="btn-secondary btn-plain" onclick="showScreen('home')">Volver al inicio</button>
@@ -1190,18 +1215,14 @@
     </div>
   </div>
 
-  <!-- ===================== MEMO M2 OP SCREEN ===================== -->
+  <!-- MEMO M2 OP SCREEN -->
   <div class="screen hidden" id="screen-memo">
     <div class="memo-header">
       <button class="btn-back glass btn-plain" onclick="memoGoHome()">‹</button>
       <div class="memo-header-title" id="memoHeaderTitle">Memo M2 OP</div>
-      <div class="memo-phase-badge memo" id="memoPhaseBadge">CONFIG</div>
+      <div class="memo-phase-badge config" id="memoPhaseBadge">CONFIG</div>
     </div>
-
-    <div class="memo-body" id="memoBody">
-      <!-- content injected by JS -->
-    </div>
-
+    <div class="memo-body" id="memoBody"></div>
     <div class="memo-footer" id="memoFooter">
       <div class="memo-footer-hint" id="memoFooterHint"></div>
       <button class="btn-start btn-plain" id="memoBtnAction" onclick="memoAction()">Generar secuencia</button>
@@ -1210,18 +1231,17 @@
 
   <script>
     /* ============================================================
-       ORIGINAL 3STYLE DATA & LOGIC (unchanged)
+       3STYLE DATA & LOGIC
     ============================================================ */
     const URLS = {
-      UF: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=405240257&single=true&output=csv',
-      UFR: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=1045305092&single=true&output=csv',
+      UF:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=405240257&single=true&output=csv',
+      UFR:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=1045305092&single=true&output=csv',
       PARITY: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=327120672&single=true&output=csv',
-      PAIRS: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=685671113&single=true&output=csv',
+      PAIRS:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vQRHYLqZ6MAOo7inO-6FVeVdbUH7gHQHgzZE8UHr1uQwkewR3LLQKX01qfNZ2wU6g/pub?gid=685671113&single=true&output=csv',
     };
 
     const STORAGE_KEY = '3style_dataset_v2';
     const SET_ORDER = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
-
     const DB = { UF: null, UFR: null, PAIRS: null, PARITY: null, UF_PAIRS: {}, UFR_PAIRS: {} };
 
     let currentType = 'UF';
@@ -1337,18 +1357,22 @@
     async function loadData() {
       showScreen('loading'); setLoadingMsg('descargando datos...'); setStatus(false, 'cargando datos...');
       try {
-        const [ufText, ufrText, pairsText, parityText] = await Promise.all([fetchCSV(URLS.UF), fetchCSV(URLS.UFR), fetchCSV(URLS.PAIRS), fetchCSV(URLS.PARITY)]);
-        setLoadingMsg('procesando uf...'); DB.UF = buildMatrix(parseCSV(ufText));
-        setLoadingMsg('procesando ufr...'); DB.UFR = buildMatrix(parseCSV(ufrText));
-        setLoadingMsg('procesando letter pairs...'); DB.PAIRS = buildMatrix(parseCSV(pairsText));
-        setLoadingMsg('procesando parity...'); DB.PARITY = buildMatrix(parseCSV(parityText));
-        DB.UF_PAIRS = buildPairs(DB.UF); DB.UFR_PAIRS = buildPairs(DB.UFR);
-        if (!Object.keys(DB.UF_PAIRS).length && !Object.keys(DB.UFR_PAIRS).length) throw new Error('No se encontraron pares válidos');
+        const [ufText, ufrText, pairsText, parityText] = await Promise.all([
+          fetchCSV(URLS.UF), fetchCSV(URLS.UFR), fetchCSV(URLS.PAIRS), fetchCSV(URLS.PARITY)
+        ]);
+        setLoadingMsg('procesando uf...');           DB.UF     = buildMatrix(parseCSV(ufText));
+        setLoadingMsg('procesando ufr...');          DB.UFR    = buildMatrix(parseCSV(ufrText));
+        setLoadingMsg('procesando letter pairs...'); DB.PAIRS  = buildMatrix(parseCSV(pairsText));
+        setLoadingMsg('procesando parity...');       DB.PARITY = buildMatrix(parseCSV(parityText));
+        DB.UF_PAIRS  = buildPairs(DB.UF);
+        DB.UFR_PAIRS = buildPairs(DB.UFR);
+        if (!Object.keys(DB.UF_PAIRS).length && !Object.keys(DB.UFR_PAIRS).length)
+          throw new Error('No se encontraron pares válidos');
         saveDatasetToLocal(); setStatus(true, 'datos listos'); showScreen('home');
       } catch (e) {
         const localOk = loadDatasetFromLocal();
         if (localOk) { setStatus(true, 'modo local'); showScreen('home'); return; }
-        document.getElementById('errorMsg').textContent = 'No se pudo cargar: ' + e.message + '. Verifica los links CSV y tu conexión.';
+        document.getElementById('errorMsg').textContent = 'No se pudo cargar: ' + e.message;
         setStatus(false, 'error al cargar'); showScreen('error');
       }
     }
@@ -1358,8 +1382,7 @@
       document.getElementById('setsTypeBadge').textContent = type;
       const pairs = type === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
       const grid = document.getElementById('setsGrid'); grid.innerHTML = '';
-      const sets = sortSets(Object.keys(pairs));
-      sets.forEach(setName => {
+      sortSets(Object.keys(pairs)).forEach(setName => {
         const chip = document.createElement('button');
         chip.className = 'set-chip btn-plain animate-in'; chip.textContent = setName;
         chip.onclick = () => toggleSet(setName, chip); grid.appendChild(chip);
@@ -1376,22 +1399,26 @@
     function updateSetFooter() {
       const pairs = currentType === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
       let total = 0;
-      selectedSets.forEach(setName => { total += (pairs[setName] || []).length; });
+      selectedSets.forEach(s => { total += (pairs[s] || []).length; });
       document.getElementById('selectedCount').textContent = `${selectedSets.size} set${selectedSets.size !== 1 ? 's' : ''} · ${total} pares`;
       document.getElementById('btnStart').disabled = selectedSets.size === 0 || total === 0;
     }
 
     function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [array[i],array[j]] = [array[j],array[i]]; }
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
 
     function startPractice() {
       const pairs = currentType === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
       const allPairs = [];
-      selectedSets.forEach(setName => { (pairs[setName] || []).forEach(target => { allPairs.push([setName, target]); }); });
-      if (!allPairs.length) { alert('No hay pares disponibles para esos sets.'); return; }
+      selectedSets.forEach(s => { (pairs[s] || []).forEach(t => allPairs.push([s, t])); });
+      if (!allPairs.length) { alert('No hay pares disponibles.'); return; }
       shuffle(allPairs);
-      session = { queue: allPairs, done: 0, total: allPairs.length, current: null, phase: 'idle', timerRunning: false, timerSecs: 0, timerInterval: null, type: currentType, sets: sortSets([...selectedSets]) };
+      session = { queue: allPairs, done: 0, total: allPairs.length, current: null, phase: 'idle',
+        timerRunning: false, timerSecs: 0, timerInterval: null, type: currentType, sets: sortSets([...selectedSets]) };
       resetTimer(); showScreen('practice'); nextPair();
     }
 
@@ -1443,34 +1470,39 @@
     function handleTap(e) {
       if (e.target.closest('.practice-back') || e.target.closest('.btn-timer')) return;
       flashScreen();
-      if (session.phase === 'idle') { revealAlg(); } else { nextPair(); }
+      if (session.phase === 'idle') revealAlg(); else nextPair();
     }
 
     function toggleTimer(e) {
       e.stopPropagation();
-      if (session.timerRunning) { pauseTimer(); } else { startTimer(); }
+      if (session.timerRunning) pauseTimer(); else startTimer();
     }
 
     function startTimer() {
       if (session.timerRunning) return;
       session.timerRunning = true;
-      const btn = document.getElementById('btnTimer'); btn.classList.add('running'); btn.textContent = '⏸ ' + formatTime(session.timerSecs);
-      session.timerInterval = setInterval(() => { session.timerSecs++; btn.textContent = '⏸ ' + formatTime(session.timerSecs); }, 1000);
+      const btn = document.getElementById('btnTimer');
+      btn.classList.add('running'); btn.textContent = '⏸ ' + formatTime(session.timerSecs);
+      session.timerInterval = setInterval(() => {
+        session.timerSecs++; btn.textContent = '⏸ ' + formatTime(session.timerSecs);
+      }, 1000);
     }
 
     function pauseTimer() {
       session.timerRunning = false; clearInterval(session.timerInterval); session.timerInterval = null;
-      const btn = document.getElementById('btnTimer'); btn.classList.remove('running'); btn.textContent = '▶ ' + formatTime(session.timerSecs);
+      const btn = document.getElementById('btnTimer');
+      btn.classList.remove('running'); btn.textContent = '▶ ' + formatTime(session.timerSecs);
     }
 
     function resetTimer() {
-      clearInterval(session.timerInterval); session.timerInterval = null; session.timerRunning = false; session.timerSecs = 0;
-      const btn = document.getElementById('btnTimer'); btn.classList.remove('running'); btn.textContent = '▶ timer';
+      clearInterval(session.timerInterval); session.timerInterval = null;
+      session.timerRunning = false; session.timerSecs = 0;
+      const btn = document.getElementById('btnTimer');
+      btn.classList.remove('running'); btn.textContent = '▶ timer';
     }
 
-    function formatTime(totalSecs) {
-      const m = Math.floor(totalSecs/60).toString().padStart(2,'0'), s = (totalSecs%60).toString().padStart(2,'0');
-      return `${m}:${s}`;
+    function formatTime(s) {
+      return Math.floor(s/60).toString().padStart(2,'0') + ':' + (s%60).toString().padStart(2,'0');
     }
 
     function finishSession() {
@@ -1484,16 +1516,17 @@
     function repeatSession() {
       const pairs = session.type === 'UF' ? DB.UF_PAIRS : DB.UFR_PAIRS;
       const allPairs = [];
-      session.sets.forEach(setName => { (pairs[setName] || []).forEach(target => { allPairs.push([setName, target]); }); });
+      session.sets.forEach(s => { (pairs[s] || []).forEach(t => allPairs.push([s, t])); });
       shuffle(allPairs);
-      session.queue = allPairs; session.done = 0; session.total = allPairs.length; session.current = null; session.phase = 'idle';
+      session.queue = allPairs; session.done = 0; session.total = allPairs.length;
+      session.current = null; session.phase = 'idle';
       resetTimer(); showScreen('practice'); nextPair();
     }
 
     function confirmBack(e) { e.stopPropagation(); pauseTimer(); showScreen('home'); }
 
     /* ============================================================
-       MEMO M2 OP — DATA
+       MEMO M2 OP
     ============================================================ */
 
     const MEMO_EDGES_LETTERS   = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
@@ -1507,9 +1540,6 @@
       ['A','B','C'],['D','E','F'],['I','G','H'],['M','N','O'],['P','Q','R'],['S','T','U'],['K','L','J']
     ];
 
-    // ── CAMBIO PRINCIPAL: defaults y rangos ──────────────────────
-    // edgeCount  = 10 letras  (rango 10–11)
-    // cornerCount =  6 letras  (rango  6–7)
     let memo = {
       phase: 'config',
       includeEdges: true,
@@ -1518,20 +1548,24 @@
       cornerCount: 6,
       generatedEdges: [],
       generatedCorners: [],
+      // countdown
+      countdownInterval: null,
+      countdownIdx: 0,
+      countdownPhase: null,
+      // test
       testPhase: null,
-      testQueue: [],
       testAnswers: [],
+      _edgeAnswers: [],
+      _cornerAnswers: [],
       currentTestPairIdx: 0,
       currentLetterIdx: 0,
       typedLetters: [],
     };
 
-    /* ---- Generador de secuencias ---- */
+    /* ─── Helpers ─── */
 
     function edgePairForbidden(a, b) {
-      return EDGE_FORBIDDEN_PAIRS.some(([x,y]) =>
-        (x===a && y===b) || (x===b && y===a) || a===b
-      );
+      return EDGE_FORBIDDEN_PAIRS.some(([x,y]) => (x===a&&y===b)||(x===b&&y===a)||a===b);
     }
 
     function cornerPairForbidden(a, b) {
@@ -1539,67 +1573,65 @@
       return CORNER_FORBIDDEN_GROUPS.some(grp => grp.includes(a) && grp.includes(b));
     }
 
-    // Genera `count` letras individuales (no pares) sin restricciones consecutivas
-    // y las agrupa en pares de 2 para el test.
-    // count debe ser par (10 u 11 → usamos floor(count/2) pares, descartamos impar)
+    /* ─── Generadores sin letras repetidas ─── */
+
     function generateEdgePairs(letterCount) {
-      const letters = MEMO_EDGES_LETTERS;
-      const pairs = [];
-      let attempts = 0;
-      const pairCount = Math.floor(letterCount / 2);
-      while (pairs.length < pairCount && attempts < 2000) {
-        attempts++;
-        const a = letters[Math.floor(Math.random() * letters.length)];
-        const b = letters[Math.floor(Math.random() * letters.length)];
-        if (edgePairForbidden(a, b)) continue;
-        const last = pairs[pairs.length - 1];
-        if (last && last[0] === a && last[1] === b) continue;
-        pairs.push([a, b]);
-      }
-      // Si letterCount es impar (11), añade una letra extra como par incompleto
-      if (letterCount % 2 === 1 && pairs.length === pairCount) {
-        let extra = null, att2 = 0;
-        while (!extra && att2 < 500) {
-          att2++;
-          const a = letters[Math.floor(Math.random() * letters.length)];
-          const lastPair = pairs[pairs.length - 1];
-          if (lastPair && lastPair[1] === a) continue;
-          extra = a;
-        }
-        if (extra) pairs.push([extra, null]);
-      }
-      return pairs;
+      // 1) Mezclar pool único
+      const pool = [...MEMO_EDGES_LETTERS];
+      shuffle(pool);
+      // 2) Tomar las primeras letterCount letras
+      const chosen = pool.slice(0, letterCount);
+      // 3) Agrupar en pares validando forbidden
+      return buildPairsFromChosen(chosen, edgePairForbidden);
     }
 
     function generateCornerPairs(letterCount) {
-      const letters = MEMO_CORNERS_LETTERS;
-      const pairs = [];
-      let attempts = 0;
-      const pairCount = Math.floor(letterCount / 2);
-      while (pairs.length < pairCount && attempts < 2000) {
-        attempts++;
-        const a = letters[Math.floor(Math.random() * letters.length)];
-        const b = letters[Math.floor(Math.random() * letters.length)];
-        if (cornerPairForbidden(a, b)) continue;
-        const last = pairs[pairs.length - 1];
-        if (last && last[0] === a && last[1] === b) continue;
-        pairs.push([a, b]);
-      }
-      if (letterCount % 2 === 1 && pairs.length === pairCount) {
-        let extra = null, att2 = 0;
-        while (!extra && att2 < 500) {
-          att2++;
-          const a = letters[Math.floor(Math.random() * letters.length)];
-          const lastPair = pairs[pairs.length - 1];
-          if (lastPair && lastPair[1] === a) continue;
-          extra = a;
+      const pool = [...MEMO_CORNERS_LETTERS];
+      shuffle(pool);
+      const chosen = pool.slice(0, letterCount);
+      return buildPairsFromChosen(chosen, cornerPairForbidden);
+    }
+
+    function buildPairsFromChosen(chosen, forbiddenFn) {
+      // Intentar resolver conflictos forbidden intercambiando letras adyacentes
+      const arr = [...chosen];
+      for (let i = 0; i < arr.length - 1; i += 2) {
+        const a = arr[i], b = arr[i+1];
+        if (forbiddenFn(a, b)) {
+          // Buscar la siguiente letra disponible para intercambiar con b
+          let swapped = false;
+          for (let j = i + 2; j < arr.length; j++) {
+            if (!forbiddenFn(a, arr[j])) {
+              [arr[i+1], arr[j]] = [arr[j], arr[i+1]];
+              swapped = true;
+              break;
+            }
+          }
+          // Si no hay swap posible, intercambiar a con el anterior disponible
+          if (!swapped && i > 0) {
+            [arr[i], arr[i-1]] = [arr[i-1], arr[i]];
+          }
         }
-        if (extra) pairs.push([extra, null]);
+      }
+      // Construir array de pares [a,b] o [a,null] si impar
+      const pairs = [];
+      for (let i = 0; i < arr.length; i += 2) {
+        if (i + 1 < arr.length) {
+          pairs.push([arr[i], arr[i+1]]);
+        } else {
+          pairs.push([arr[i], null]);
+        }
       }
       return pairs;
     }
 
-    /* ---- Renderizado del módulo ---- */
+    function totalLettersInPairs(pairs) {
+      let n = 0;
+      pairs.forEach(([a,b]) => { if(a) n++; if(b) n++; });
+      return n;
+    }
+
+    /* ─── Render principal ─── */
 
     function openMemo() {
       memo.phase = 'config';
@@ -1608,50 +1640,39 @@
     }
 
     function memoGoHome() {
+      clearInterval(memo.countdownInterval);
+      memo.countdownInterval = null;
       blurKeyboard();
       showScreen('home');
     }
 
     function renderMemo() {
-      const body = document.getElementById('memoBody');
-      const footer = document.getElementById('memoFooter');
-      const badge = document.getElementById('memoPhaseBadge');
+      const body        = document.getElementById('memoBody');
+      const footer      = document.getElementById('memoFooter');
+      const badge       = document.getElementById('memoPhaseBadge');
       const headerTitle = document.getElementById('memoHeaderTitle');
-      const btn = document.getElementById('memoBtnAction');
-      const hint = document.getElementById('memoFooterHint');
+      const btn         = document.getElementById('memoBtnAction');
+      const hint        = document.getElementById('memoFooterHint');
 
       body.innerHTML = '';
       badge.className = 'memo-phase-badge';
 
       if (memo.phase === 'config') {
-        badge.classList.add('memo'); badge.textContent = 'CONFIG';
+        badge.classList.add('config'); badge.textContent = 'CONFIG';
         headerTitle.textContent = 'Memo M2 OP';
         hint.textContent = '';
         btn.textContent = 'Generar secuencia';
-        btn.disabled = false;
-        btn.style.display = 'flex';
+        btn.disabled = false; btn.style.display = '';
         footer.style.display = 'flex';
         renderConfig(body);
 
-      } else if (memo.phase === 'memo-corners') {
+      } else if (memo.phase === 'countdown-corners' || memo.phase === 'countdown-edges') {
         badge.classList.add('memo'); badge.textContent = 'MEMO';
-        headerTitle.textContent = 'Memoriza esquinas';
-        hint.textContent = 'Cuando las tengas memorizadas, continúa';
-        btn.textContent = 'Listo, ver aristas →';
-        btn.disabled = false;
-        btn.style.display = 'flex';
+        headerTitle.textContent = memo.phase === 'countdown-corners' ? 'Memoriza esquinas' : 'Memoriza aristas';
+        hint.textContent = '';
+        btn.style.display = 'none';
         footer.style.display = 'flex';
-        renderMemoDisplay(body, memo.generatedCorners, 'Esquinas', false);
-
-      } else if (memo.phase === 'memo-edges') {
-        badge.classList.add('memo'); badge.textContent = 'MEMO';
-        headerTitle.textContent = 'Memoriza aristas';
-        hint.textContent = 'Cuando las tengas memorizadas, continúa';
-        btn.textContent = 'Listo, empezar test →';
-        btn.disabled = false;
-        btn.style.display = 'flex';
-        footer.style.display = 'flex';
-        renderMemoDisplay(body, memo.generatedEdges, 'Aristas', false);
+        renderCountdown(body, memo.countdownPhase);
 
       } else if (memo.phase === 'test-edges') {
         badge.classList.add('test'); badge.textContent = 'TEST';
@@ -1673,19 +1694,19 @@
         badge.classList.add('done'); badge.textContent = 'RESULTADO';
         headerTitle.textContent = 'Resultado';
         hint.textContent = '';
-        btn.style.display = 'flex';
         btn.textContent = 'Nueva sesión';
-        btn.disabled = false;
+        btn.disabled = false; btn.style.display = '';
         footer.style.display = 'flex';
         renderResult(body);
       }
     }
 
+    /* ─── Config ─── */
+
     function renderConfig(body) {
-      // Tipo de piezas
       const typeSection = document.createElement('div');
       typeSection.className = 'memo-config-section';
-      typeSection.innerHTML = `<div class="memo-config-label">¿Qué practicar?</div>`;
+      typeSection.innerHTML = '<div class="memo-config-label">¿Qué practicar?</div>';
 
       const toggleRow = document.createElement('div');
       toggleRow.className = 'memo-toggle-row';
@@ -1705,33 +1726,29 @@
       typeSection.appendChild(toggleRow);
       body.appendChild(typeSection);
 
-      // ── CAMBIO: rangos ajustados ─────────────────────────────
-      // Aristas: 10–11 letras  |  Esquinas: 6–7 letras
-
       if (memo.includeEdges) {
-        const edgeSection = document.createElement('div');
-        edgeSection.className = 'memo-config-section';
-        edgeSection.innerHTML = `<div class="memo-config-label">Letras de aristas</div>`;
-        edgeSection.appendChild(makeLengthRow('edge', memo.edgeCount, 10, 11));
-        body.appendChild(edgeSection);
+        const s = document.createElement('div');
+        s.className = 'memo-config-section';
+        s.innerHTML = '<div class="memo-config-label">Letras de aristas</div>';
+        s.appendChild(makeLengthRow('edge', memo.edgeCount, 4, MEMO_EDGES_LETTERS.length));
+        body.appendChild(s);
       }
 
       if (memo.includeCorners) {
-        const cornerSection = document.createElement('div');
-        cornerSection.className = 'memo-config-section';
-        cornerSection.innerHTML = `<div class="memo-config-label">Letras de esquinas</div>`;
-        cornerSection.appendChild(makeLengthRow('corner', memo.cornerCount, 6, 7));
-        body.appendChild(cornerSection);
+        const s = document.createElement('div');
+        s.className = 'memo-config-section';
+        s.innerHTML = '<div class="memo-config-label">Letras de esquinas</div>';
+        s.appendChild(makeLengthRow('corner', memo.cornerCount, 4, MEMO_CORNERS_LETTERS.length));
+        body.appendChild(s);
       }
 
-      // Info card
       const info = document.createElement('div');
-      info.style.cssText = 'padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.03);font-size:13px;color:var(--muted);line-height:1.6;';
+      info.style.cssText = 'padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.03);font-size:13px;color:var(--muted);line-height:1.65;';
       info.innerHTML = `
         <b style="color:var(--text-soft);display:block;margin-bottom:6px;">¿Cómo funciona?</b>
-        1. Memorizas <b style="color:var(--text-soft);">esquinas</b> → luego <b style="color:var(--text-soft);">aristas</b><br>
-        2. Test: escribes aristas de memoria → luego esquinas<br>
-        3. Ves tu resultado letra por letra
+        1. Los pares aparecen <b style="color:var(--text-soft);">uno por segundo</b> con cronómetro<br>
+        2. Cada letra aparece <b style="color:var(--text-soft);">una sola vez</b> en la secuencia<br>
+        3. Memorizas esquinas → aristas → test → resultado
       `;
       body.appendChild(info);
     }
@@ -1744,12 +1761,12 @@
       label.className = 'memo-length-label';
       label.textContent = 'Número de letras';
 
-      const btnMinus = document.createElement('button');
-      btnMinus.className = 'memo-length-btn btn-plain';
-      btnMinus.textContent = '−';
-      btnMinus.onclick = () => {
-        if (type === 'edge') { memo.edgeCount = Math.max(min, memo.edgeCount - 1); }
-        else { memo.cornerCount = Math.max(min, memo.cornerCount - 1); }
+      const btnM = document.createElement('button');
+      btnM.className = 'memo-length-btn btn-plain';
+      btnM.textContent = '−';
+      btnM.onclick = () => {
+        if (type === 'edge')   memo.edgeCount   = Math.max(min, memo.edgeCount - 1);
+        else                    memo.cornerCount = Math.max(min, memo.cornerCount - 1);
         renderMemo();
       };
 
@@ -1757,72 +1774,162 @@
       valEl.className = 'memo-length-val';
       valEl.textContent = val;
 
-      const btnPlus = document.createElement('button');
-      btnPlus.className = 'memo-length-btn btn-plain';
-      btnPlus.textContent = '+';
-      btnPlus.onclick = () => {
-        if (type === 'edge') { memo.edgeCount = Math.min(max, memo.edgeCount + 1); }
-        else { memo.cornerCount = Math.min(max, memo.cornerCount + 1); }
+      const btnP = document.createElement('button');
+      btnP.className = 'memo-length-btn btn-plain';
+      btnP.textContent = '+';
+      btnP.onclick = () => {
+        if (type === 'edge')   memo.edgeCount   = Math.min(max, memo.edgeCount + 1);
+        else                    memo.cornerCount = Math.min(max, memo.cornerCount + 1);
         renderMemo();
       };
 
       row.appendChild(label);
-      row.appendChild(btnMinus);
+      row.appendChild(btnM);
       row.appendChild(valEl);
-      row.appendChild(btnPlus);
+      row.appendChild(btnP);
       return row;
     }
 
-    function renderMemoDisplay(body, pairs, title, hideLetters) {
-      // Contar letras reales (el último par puede tener null como segunda letra)
-      let letterCount = 0;
-      pairs.forEach(([a, b]) => { letterCount += a ? 1 : 0; letterCount += b ? 1 : 0; });
+    /* ─── Countdown ─── */
 
-      const titleEl = document.createElement('div');
-      titleEl.className = 'memo-section-title';
-      titleEl.textContent = title + ' — ' + letterCount + ' letras';
-      body.appendChild(titleEl);
+    function startCountdown(phase) {
+      clearInterval(memo.countdownInterval);
+      memo.countdownPhase = phase;
+      memo.countdownIdx   = 0;
+      memo.phase = 'countdown-' + phase;
+      renderMemo();
 
-      const grid = document.createElement('div');
-      grid.className = 'memo-pairs-grid';
+      memo.countdownInterval = setInterval(() => {
+        const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+        memo.countdownIdx++;
 
-      let letterIdx = 0;
-      pairs.forEach(([a, b], idx) => {
-        const chip = document.createElement('div');
-        chip.className = 'memo-pair-chip';
+        if (memo.countdownIdx >= pairs.length) {
+          // Terminó de mostrar todos los pares
+          clearInterval(memo.countdownInterval);
+          memo.countdownInterval = null;
 
-        const num = document.createElement('span');
-        num.className = 'pair-num';
-        // Mostrar rango de letras que cubre este par
-        const from = letterIdx + 1;
-        const to = letterIdx + (a ? 1 : 0) + (b ? 1 : 0);
-        num.textContent = b ? `${from}-${to}` : `${from}`;
-        letterIdx = to;
-
-        const letters = document.createElement('span');
-        letters.className = 'pair-letters';
-        if (hideLetters) {
-          letters.innerHTML = `<span style="color:rgba(255,255,255,0.15)">? · ?</span>`;
-        } else if (b) {
-          letters.innerHTML = `${a}<span class="memo-pair-sep"> · </span>${b}`;
+          setTimeout(() => {
+            if (phase === 'corners') {
+              if (memo.includeEdges && memo.generatedEdges.length > 0) {
+                startCountdown('edges');
+              } else {
+                initTest('corners');
+                memo.phase = 'test-corners';
+                renderMemo();
+              }
+            } else {
+              initTest('edges');
+              memo.phase = 'test-edges';
+              renderMemo();
+            }
+          }, 700);
         } else {
-          letters.innerHTML = `${a}<span class="memo-pair-sep"> · </span><span style="color:rgba(255,255,255,0.3)">—</span>`;
+          renderMemo();
         }
-
-        chip.appendChild(num);
-        chip.appendChild(letters);
-        grid.appendChild(chip);
-      });
-
-      body.appendChild(grid);
+      }, 1000);
     }
 
-    /* ---- TEST ---- */
+    function skipCountdown() {
+      clearInterval(memo.countdownInterval);
+      memo.countdownInterval = null;
+      const phase = memo.countdownPhase;
+      if (phase === 'corners') {
+        if (memo.includeEdges && memo.generatedEdges.length > 0) {
+          startCountdown('edges');
+        } else {
+          initTest('corners');
+          memo.phase = 'test-corners';
+          renderMemo();
+        }
+      } else {
+        initTest('edges');
+        memo.phase = 'test-edges';
+        renderMemo();
+      }
+    }
+
+    function renderCountdown(body, phase) {
+      const pairs   = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      const total   = pairs.length;
+      const current = Math.min(memo.countdownIdx, total - 1);
+      const [pA, pB] = pairs[current];
+
+      const wrap = document.createElement('div');
+      wrap.className = 'countdown-wrap';
+
+      /* Anillo SVG */
+      const R = 50, stroke = 7;
+      const C = 2 * Math.PI * R;
+      const pct = total > 0 ? (current + 1) / total : 0;
+      const dash = C - pct * C;
+      const size = 130;
+
+      const ringWrap = document.createElement('div');
+      ringWrap.className = 'countdown-ring-wrap';
+      ringWrap.innerHTML = `
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+          <circle cx="${size/2}" cy="${size/2}" r="${R}"
+            fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="${stroke}"/>
+          <circle cx="${size/2}" cy="${size/2}" r="${R}"
+            fill="none" stroke="var(--success)" stroke-width="${stroke}"
+            stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${dash.toFixed(2)}"
+            stroke-linecap="round"
+            transform="rotate(-90 ${size/2} ${size/2})"
+            style="transition:stroke-dashoffset .9s ease"/>
+        </svg>
+        <div class="countdown-center">
+          <div class="countdown-num">${current + 1}</div>
+          <div class="countdown-of">de ${total}</div>
+        </div>
+      `;
+      wrap.appendChild(ringWrap);
+
+      /* Par actual */
+      const pairEl = document.createElement('div');
+      pairEl.className = 'countdown-current-pair';
+      if (pB) {
+        pairEl.innerHTML = `${pA}<span class="countdown-pair-sep">·</span>${pB}`;
+      } else {
+        pairEl.innerHTML = `${pA}<span class="countdown-pair-sep" style="opacity:.3">·</span><span style="opacity:.3">—</span>`;
+      }
+      wrap.appendChild(pairEl);
+
+      /* Chips de todos los pares */
+      const chipsWrap = document.createElement('div');
+      chipsWrap.className = 'countdown-chips-wrap';
+      const chipsLabel = document.createElement('div');
+      chipsLabel.className = 'countdown-chips-label';
+      chipsLabel.textContent = (phase === 'edges' ? 'Aristas' : 'Esquinas') + ' — ' + totalLettersInPairs(pairs) + ' letras';
+      chipsWrap.appendChild(chipsLabel);
+
+      const chips = document.createElement('div');
+      chips.className = 'countdown-chips';
+      pairs.forEach(([a, b], idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'cchip';
+        if (idx < current)  chip.classList.add('revealed');
+        if (idx === current) chip.classList.add('active');
+        chip.textContent = b ? `${a}·${b}` : `${a}`;
+        chips.appendChild(chip);
+      });
+      chipsWrap.appendChild(chips);
+      wrap.appendChild(chipsWrap);
+
+      /* Botón skip */
+      const skipBtn = document.createElement('button');
+      skipBtn.className = 'btn-skip btn-plain';
+      skipBtn.textContent = 'Saltar al test →';
+      skipBtn.onclick = skipCountdown;
+      wrap.appendChild(skipBtn);
+
+      body.appendChild(wrap);
+    }
+
+    /* ─── Test ─── */
 
     function initTest(phase) {
       const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
       memo.testPhase = phase;
-      memo.testQueue = pairs.map(p => [...p]);
       memo.typedLetters = pairs.map(([a, b]) => b ? ['', ''] : ['']);
       memo.testAnswers = [];
       memo.currentTestPairIdx = 0;
@@ -1832,24 +1939,23 @@
 
     function renderTestScreen(body, phase) {
       const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
-      let totalLetters = 0;
-      pairs.forEach(([a, b]) => { totalLetters += a ? 1 : 0; totalLetters += b ? 1 : 0; });
-      let answeredLetters = 0;
+      let totalL = 0;
+      pairs.forEach(([a,b]) => { if(a) totalL++; if(b) totalL++; });
+      let answeredL = 0;
       for (let i = 0; i < memo.currentTestPairIdx; i++) {
-        const [a, b] = pairs[i];
-        answeredLetters += a ? 1 : 0; answeredLetters += b ? 1 : 0;
+        const [a,b] = pairs[i]; if(a) answeredL++; if(b) answeredL++;
       }
-      answeredLetters += memo.currentLetterIdx;
+      answeredL += memo.currentLetterIdx;
 
-      // Progress
+      /* Barra de progreso */
       const progressRow = document.createElement('div');
       progressRow.className = 'test-progress-row';
       const bar = document.createElement('div'); bar.className = 'test-progress-bar';
       const fill = document.createElement('div'); fill.className = 'test-progress-fill';
-      fill.style.width = `${(answeredLetters/totalLetters)*100}%`;
+      fill.style.width = `${(answeredL / totalL) * 100}%`;
       bar.appendChild(fill);
       const lbl = document.createElement('div'); lbl.className = 'test-progress-label';
-      lbl.textContent = `${answeredLetters} / ${totalLetters}`;
+      lbl.textContent = `${answeredL} / ${totalL}`;
       progressRow.appendChild(bar); progressRow.appendChild(lbl);
       body.appendChild(progressRow);
 
@@ -1858,7 +1964,7 @@
       phaseLabel.textContent = phase === 'edges' ? '· ARISTAS ·' : '· ESQUINAS ·';
       body.appendChild(phaseLabel);
 
-      // Grid de slots
+      /* Grid de slots */
       const grid = document.createElement('div');
       grid.className = 'test-inputs-grid';
 
@@ -1866,7 +1972,7 @@
         const typedA = (memo.typedLetters[idx] || [])[0] || '';
         const typedB = correctB ? ((memo.typedLetters[idx] || [])[1] || '') : null;
         const isActive = idx === memo.currentTestPairIdx;
-        const isDone = idx < memo.currentTestPairIdx;
+        const isDone   = idx < memo.currentTestPairIdx;
 
         const slot = document.createElement('div');
         slot.className = 'test-pair-slot';
@@ -1879,8 +1985,8 @@
         wrap.className = 'test-input-wrap';
         if (isActive) wrap.classList.add('active-slot');
         if (isDone) {
-          const pairCorrect = typedA.toUpperCase() === correctA && (correctB ? typedB.toUpperCase() === correctB : true);
-          wrap.classList.add(pairCorrect ? 'correct' : 'wrong');
+          const ok = typedA.toUpperCase() === correctA && (correctB ? typedB.toUpperCase() === correctB : true);
+          wrap.classList.add(ok ? 'correct' : 'wrong');
         }
 
         const boxA = document.createElement('div');
@@ -1889,84 +1995,53 @@
           boxA.classList.add(typedA.toUpperCase() === correctA ? 'correct-letter' : 'wrong-letter');
           boxA.textContent = typedA || '_';
         } else if (isActive && memo.currentLetterIdx === 0) {
-          if (typedA) {
-            boxA.textContent = typedA;
-          } else {
-            boxA.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
-          }
+          if (typedA) boxA.textContent = typedA;
+          else boxA.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
         } else if (isActive && memo.currentLetterIdx === 1) {
           boxA.textContent = typedA || '_';
         } else {
-          boxA.classList.add('empty');
-          boxA.textContent = '_';
+          boxA.classList.add('empty'); boxA.textContent = '_';
         }
-
         wrap.appendChild(boxA);
 
         if (correctB) {
-          const sep = document.createElement('div');
-          sep.className = 'test-sep';
-          sep.textContent = '·';
-
-          const boxB = document.createElement('div');
-          boxB.className = 'test-letter-box';
+          const sep = document.createElement('div'); sep.className = 'test-sep'; sep.textContent = '·';
+          const boxB = document.createElement('div'); boxB.className = 'test-letter-box';
           if (isDone) {
             boxB.classList.add(typedB.toUpperCase() === correctB ? 'correct-letter' : 'wrong-letter');
             boxB.textContent = typedB || '_';
           } else if (isActive && memo.currentLetterIdx === 1) {
-            if (typedB) {
-              boxB.textContent = typedB;
-            } else {
-              boxB.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
-            }
-          } else if (isActive && memo.currentLetterIdx === 0) {
-            boxB.classList.add('empty');
-            boxB.textContent = '_';
+            if (typedB) boxB.textContent = typedB;
+            else boxB.innerHTML = '<span style="display:inline-block;width:2px;height:20px;background:rgba(255,255,255,0.7);border-radius:1px;animation:blink 1s step-end infinite"></span>';
           } else {
-            boxB.classList.add('empty');
-            boxB.textContent = '_';
+            boxB.classList.add('empty'); boxB.textContent = '_';
           }
-
-          wrap.appendChild(sep);
-          wrap.appendChild(boxB);
+          wrap.appendChild(sep); wrap.appendChild(boxB);
         } else {
-          // Par incompleto (letra impar final)
-          const sep = document.createElement('div');
-          sep.className = 'test-sep';
-          sep.textContent = '·';
-          const boxEmpty = document.createElement('div');
-          boxEmpty.className = 'test-letter-box empty';
-          boxEmpty.style.opacity = '0.3';
-          boxEmpty.textContent = '—';
-          wrap.appendChild(sep);
-          wrap.appendChild(boxEmpty);
+          const sep = document.createElement('div'); sep.className = 'test-sep'; sep.textContent = '·';
+          const boxE = document.createElement('div'); boxE.className = 'test-letter-box empty';
+          boxE.style.opacity = '0.3'; boxE.textContent = '—';
+          wrap.appendChild(sep); wrap.appendChild(boxE);
         }
 
         slot.appendChild(numEl); slot.appendChild(wrap);
         grid.appendChild(slot);
       });
 
-      if (!document.getElementById('blinkStyle')) {
-        const style = document.createElement('style');
-        style.id = 'blinkStyle';
-        style.textContent = '@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }';
-        document.head.appendChild(style);
-      }
-
       body.appendChild(grid);
 
-      // Hint de respuesta correcta si el último par fue incorrecto
+      /* Hint de respuesta correcta si el último par estuvo mal */
       if (memo.currentTestPairIdx > 0) {
-        const lastIdx = memo.currentTestPairIdx - 1;
-        const [ca, cb] = pairs[lastIdx];
-        const ta = (memo.typedLetters[lastIdx] || [])[0] || '';
-        const tb = cb ? ((memo.typedLetters[lastIdx] || [])[1] || '') : null;
-        const wasCorrect = ta.toUpperCase() === ca && (cb ? tb.toUpperCase() === cb : true);
-        if (!wasCorrect) {
+        const li = memo.currentTestPairIdx - 1;
+        const [ca, cb] = pairs[li];
+        const ta = (memo.typedLetters[li] || [])[0] || '';
+        const tb = cb ? ((memo.typedLetters[li] || [])[1] || '') : null;
+        const wasOk = ta.toUpperCase() === ca && (cb ? tb.toUpperCase() === cb : true);
+        if (!wasOk) {
           const hint = document.createElement('div');
           hint.className = 'test-answer-row';
-          const correctDisplay = cb ? `${ca} · ${cb}` : `${ca}`;
-          hint.innerHTML = `<span>Par ${lastIdx+1} correcto:</span><span style="font-size:18px;font-weight:800;color:var(--success)">${correctDisplay}</span>`;
+          const cd = cb ? `${ca} · ${cb}` : `${ca}`;
+          hint.innerHTML = `<span>Par ${li+1} correcto:</span><span style="font-size:18px;font-weight:800;color:var(--success)">${cd}</span>`;
           body.appendChild(hint);
         }
       }
@@ -1979,27 +2054,23 @@
       }, 50);
     }
 
-    /* Teclado invisible */
+    /* ─── Teclado ─── */
+
     function focusKeyboard() {
       const inp = document.getElementById('memoKeyboardCapture');
       inp.value = '';
       inp.focus();
-      inp.oninput = handleMemoInput;
+      inp.oninput   = handleMemoInput;
       inp.onkeydown = handleMemoKeydown;
     }
 
     function blurKeyboard() {
       const inp = document.getElementById('memoKeyboardCapture');
-      inp.oninput = null;
-      inp.onkeydown = null;
-      inp.blur();
+      inp.oninput = null; inp.onkeydown = null; inp.blur();
     }
 
     function handleMemoKeydown(e) {
-      if (e.key === 'Backspace') {
-        e.preventDefault();
-        handleMemoBackspace();
-      }
+      if (e.key === 'Backspace') { e.preventDefault(); handleMemoBackspace(); }
     }
 
     function handleMemoInput(e) {
@@ -2007,16 +2078,15 @@
       const raw = inp.value.toUpperCase().replace(/[^A-Z]/g, '');
       inp.value = '';
       if (!raw) return;
-      const letter = raw[raw.length - 1];
-      handleMemoLetter(letter);
+      handleMemoLetter(raw[raw.length - 1]);
     }
 
     function handleMemoLetter(letter) {
       const phase = memo.testPhase;
       const pairs = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
-      const validLetters = phase === 'edges' ? MEMO_EDGES_LETTERS : MEMO_CORNERS_LETTERS;
+      const valid = phase === 'edges' ? MEMO_EDGES_LETTERS : MEMO_CORNERS_LETTERS;
 
-      if (!validLetters.includes(letter)) return;
+      if (!valid.includes(letter)) return;
       if (memo.currentTestPairIdx >= pairs.length) return;
 
       const [correctA, correctB] = pairs[memo.currentTestPairIdx];
@@ -2024,27 +2094,21 @@
       if (memo.currentLetterIdx === 0) {
         memo.typedLetters[memo.currentTestPairIdx][0] = letter;
         if (!correctB) {
-          // Par de solo una letra → avanzar directamente
-          memo.testAnswers.push({
-            pair: [correctA, null],
-            answer: [letter, null],
-            correct: letter.toUpperCase() === correctA,
-          });
+          memo.testAnswers.push({ pair: [correctA, null], answer: [letter, null], correct: letter === correctA });
           memo.currentTestPairIdx++;
           memo.currentLetterIdx = 0;
           checkTestComplete(pairs, phase);
           return;
         }
         memo.currentLetterIdx = 1;
-        renderMemo();
-        focusKeyboard();
+        renderMemo(); focusKeyboard();
       } else {
         memo.typedLetters[memo.currentTestPairIdx][1] = letter;
         const typedA = memo.typedLetters[memo.currentTestPairIdx][0];
         memo.testAnswers.push({
           pair: [correctA, correctB],
           answer: [typedA, letter],
-          correct: typedA.toUpperCase() === correctA && letter.toUpperCase() === correctB,
+          correct: typedA === correctA && letter === correctB,
         });
         memo.currentTestPairIdx++;
         memo.currentLetterIdx = 0;
@@ -2055,22 +2119,19 @@
     function checkTestComplete(pairs, phase) {
       if (memo.currentTestPairIdx >= pairs.length) {
         if (phase === 'edges' && memo.includeCorners && memo.generatedCorners.length > 0) {
-          memo.phase = 'test-corners';
           memo._edgeAnswers = memo.testAnswers;
           initTest('corners');
+          memo.phase = 'test-corners';
           renderMemo();
         } else {
-          if (!memo._edgeAnswers) memo._edgeAnswers = [];
           if (memo.testPhase === 'corners') memo._cornerAnswers = memo.testAnswers;
           else { memo._edgeAnswers = memo.testAnswers; memo._cornerAnswers = []; }
           memo.phase = 'result';
-          blurKeyboard();
-          renderMemo();
+          blurKeyboard(); renderMemo();
         }
         return;
       }
-      renderMemo();
-      focusKeyboard();
+      renderMemo(); focusKeyboard();
     }
 
     function handleMemoBackspace() {
@@ -2079,59 +2140,59 @@
 
       if (memo.currentLetterIdx === 1) {
         memo.typedLetters[memo.currentTestPairIdx][1] = '';
-        memo.currentLetterIdx = 1;
-        renderMemo();
-        focusKeyboard();
+        renderMemo(); focusKeyboard();
       } else if (memo.currentLetterIdx === 0 && memo.currentTestPairIdx > 0) {
         memo.currentTestPairIdx--;
         const [, prevB] = pairs[memo.currentTestPairIdx];
         memo.currentLetterIdx = prevB ? 1 : 0;
-        if (prevB) {
-          memo.typedLetters[memo.currentTestPairIdx][1] = '';
-        } else {
-          memo.typedLetters[memo.currentTestPairIdx][0] = '';
-        }
+        if (prevB) memo.typedLetters[memo.currentTestPairIdx][1] = '';
+        else       memo.typedLetters[memo.currentTestPairIdx][0] = '';
         memo.testAnswers.pop();
-        renderMemo();
-        focusKeyboard();
+        renderMemo(); focusKeyboard();
       }
     }
 
+    /* ─── Resultado ─── */
+
     function renderResult(body) {
-      const edgeAnswers = memo._edgeAnswers || [];
+      const edgeAnswers   = memo._edgeAnswers   || [];
       const cornerAnswers = memo._cornerAnswers || [];
-      const allAnswers = [...edgeAnswers, ...cornerAnswers];
-      const correct = allAnswers.filter(a => a.correct).length;
-      const total = allAnswers.length;
-      const pct = total > 0 ? Math.round((correct/total)*100) : 0;
+      const all     = [...edgeAnswers, ...cornerAnswers];
+      const correct = all.filter(a => a.correct).length;
+      const total   = all.length;
+      const pct     = total > 0 ? Math.round((correct / total) * 100) : 0;
+      const color   = pct === 100 ? 'var(--success)' : pct >= 70 ? 'var(--warn)' : 'var(--danger)';
 
       const scoreCard = document.createElement('div');
       scoreCard.className = 'result-score-card glass';
       scoreCard.innerHTML = `
-        <div class="result-score-num" style="color:${pct===100?'var(--success)':pct>=70?'var(--warn)':'var(--danger)'}">${pct}%</div>
+        <div class="result-score-num" style="color:${color}">${pct}%</div>
         <div class="result-score-label">${correct} / ${total} pares correctos</div>
       `;
       body.appendChild(scoreCard);
 
-      if (edgeAnswers.length > 0) {
+      function renderSection(answers, title) {
+        if (!answers.length) return;
         const section = document.createElement('div');
         section.className = 'result-section';
-        section.innerHTML = `<div class="result-section-title">Aristas</div>`;
+        section.innerHTML = `<div class="result-section-title">${title}</div>`;
         const list = document.createElement('div');
         list.className = 'result-pairs-list';
-        edgeAnswers.forEach(({ pair, answer, correct }, idx) => {
-          const row = document.createElement('div');
-          row.className = 'result-pair-row ' + (correct ? 'correct' : 'wrong');
+        answers.forEach(({ pair, answer, correct }, idx) => {
           const [ca, cb] = pair;
           const [ta, tb] = answer;
-          const pairDisplay = cb ? `${ca}<span style="color:rgba(255,255,255,0.2)"> · </span>${cb}` : `${ca}`;
-          const answerDisplay = cb
-            ? `Escribiste: <b style="color:var(--danger)">${ta||'_'} · ${tb||'_'}</b>`
-            : `Escribiste: <b style="color:var(--danger)">${ta||'_'}</b>`;
+          const row = document.createElement('div');
+          row.className = 'result-pair-row ' + (correct ? 'correct' : 'wrong');
+          const pairD   = cb ? `${ca}<span style="color:rgba(255,255,255,0.2)"> · </span>${cb}` : `${ca}`;
+          const answerD = correct
+            ? 'Correcto'
+            : cb
+              ? `Escribiste: <b style="color:var(--danger)">${ta||'_'} · ${tb||'_'}</b>`
+              : `Escribiste: <b style="color:var(--danger)">${ta||'_'}</b>`;
           row.innerHTML = `
-            <div class="result-pair-num" style="font-size:11px;color:var(--muted);min-width:18px">${idx+1}</div>
-            <div class="result-pair-letters">${pairDisplay}</div>
-            <div class="result-pair-answer">${correct ? 'Correcto' : answerDisplay}</div>
+            <div style="font-size:11px;color:var(--muted);min-width:18px">${idx+1}</div>
+            <div class="result-pair-letters">${pairD}</div>
+            <div class="result-pair-answer">${answerD}</div>
             <div class="result-pair-icon">${correct ? '✓' : '✗'}</div>
           `;
           list.appendChild(row);
@@ -2140,74 +2201,33 @@
         body.appendChild(section);
       }
 
-      if (cornerAnswers.length > 0) {
-        const section = document.createElement('div');
-        section.className = 'result-section';
-        section.innerHTML = `<div class="result-section-title">Esquinas</div>`;
-        const list = document.createElement('div');
-        list.className = 'result-pairs-list';
-        cornerAnswers.forEach(({ pair, answer, correct }, idx) => {
-          const row = document.createElement('div');
-          row.className = 'result-pair-row ' + (correct ? 'correct' : 'wrong');
-          const [ca, cb] = pair;
-          const [ta, tb] = answer;
-          const pairDisplay = cb ? `${ca}<span style="color:rgba(255,255,255,0.2)"> · </span>${cb}` : `${ca}`;
-          const answerDisplay = cb
-            ? `Escribiste: <b style="color:var(--danger)">${ta||'_'} · ${tb||'_'}</b>`
-            : `Escribiste: <b style="color:var(--danger)">${ta||'_'}</b>`;
-          row.innerHTML = `
-            <div class="result-pair-num" style="font-size:11px;color:var(--muted);min-width:18px">${idx+1}</div>
-            <div class="result-pair-letters">${pairDisplay}</div>
-            <div class="result-pair-answer">${correct ? 'Correcto' : answerDisplay}</div>
-            <div class="result-pair-icon">${correct ? '✓' : '✗'}</div>
-          `;
-          list.appendChild(row);
-        });
-        section.appendChild(list);
-        body.appendChild(section);
-      }
+      renderSection(edgeAnswers,   'Aristas');
+      renderSection(cornerAnswers, 'Esquinas');
     }
 
-    /* ---- Acción del botón principal del memo ---- */
-    function memoAction() {
-      const btn = document.getElementById('memoBtnAction');
-      btn.style.display = 'flex';
+    /* ─── Botón principal ─── */
 
+    function memoAction() {
       if (memo.phase === 'config') {
         if (!memo.includeEdges && !memo.includeCorners) {
           alert('Selecciona al menos aristas o esquinas.');
           return;
         }
-        memo.generatedEdges = memo.includeEdges ? generateEdgePairs(memo.edgeCount) : [];
+        memo.generatedEdges   = memo.includeEdges   ? generateEdgePairs(memo.edgeCount)     : [];
         memo.generatedCorners = memo.includeCorners ? generateCornerPairs(memo.cornerCount) : [];
-        memo._edgeAnswers = [];
+        memo._edgeAnswers   = [];
         memo._cornerAnswers = [];
 
+        // Empieza siempre por esquinas si están activas, si no directo aristas
         if (memo.includeCorners && memo.generatedCorners.length > 0) {
-          memo.phase = 'memo-corners';
+          startCountdown('corners');
         } else {
-          memo.phase = 'memo-edges';
+          startCountdown('edges');
         }
-        renderMemo();
-
-      } else if (memo.phase === 'memo-corners') {
-        if (memo.includeEdges && memo.generatedEdges.length > 0) {
-          memo.phase = 'memo-edges';
-        } else {
-          memo.phase = 'test-corners';
-          initTest('corners');
-        }
-        renderMemo();
-
-      } else if (memo.phase === 'memo-edges') {
-        memo.phase = 'test-edges';
-        initTest('edges');
-        renderMemo();
 
       } else if (memo.phase === 'result') {
         memo.phase = 'config';
-        memo._edgeAnswers = [];
-        memo._cornerAnswers = [];
+        memo._edgeAnswers = []; memo._cornerAnswers = [];
         renderMemo();
       }
     }
