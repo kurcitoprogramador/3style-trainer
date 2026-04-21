@@ -884,8 +884,7 @@
     .memo-timer-bar {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      justify-content: space-evenly;
       padding: 10px 16px;
       border-radius: 14px;
       border: 1px solid var(--border);
@@ -896,9 +895,6 @@
       width: 8px;
       height: 8px;
       border-radius: 999px;
-      background: var(--success);
-      box-shadow: 0 0 0 4px rgba(147,181,157,0.15);
-      animation: pulse 1.2s ease-in-out infinite;
     }
 
     @keyframes pulse {
@@ -1177,7 +1173,6 @@
     }
 
     .history-score.good { color: var(--success); }
-    .history-score.ok   { color: var(--warn); }
     .history-score.bad  { color: var(--danger); }
 
     .history-empty {
@@ -1237,13 +1232,11 @@
   <div class="tap-flash" id="tapFlash"></div>
   <input id="memoKeyboardCapture" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" />
 
-  <!-- LOADING -->
   <div class="screen" id="screen-loading">
     <div class="loader-cube"></div>
     <div class="loader-text" id="loadingMsg">cargando datos...</div>
   </div>
 
-  <!-- ERROR -->
   <div class="screen hidden" id="screen-error">
     <div class="error-card glass">
       <div class="error-title">Error de carga</div>
@@ -1252,7 +1245,6 @@
     </div>
   </div>
 
-  <!-- HOME -->
   <div class="screen hidden" id="screen-home">
     <div class="home-top">
       <div class="home-title">3Style<span>Trainer</span></div>
@@ -1291,7 +1283,6 @@
     </div>
   </div>
 
-  <!-- SETS -->
   <div class="screen hidden" id="screen-sets">
     <div class="sets-header">
       <button class="btn-back glass btn-plain" onclick="showScreen('home')">‹</button>
@@ -1307,7 +1298,6 @@
     </div>
   </div>
 
-  <!-- PRACTICE -->
   <div class="screen hidden" id="screen-practice" onclick="handleTap(event)">
     <div class="practice-shell glass">
       <div class="practice-topbar">
@@ -1337,7 +1327,6 @@
     </div>
   </div>
 
-  <!-- DONE (3style) -->
   <div class="screen hidden" id="screen-done">
     <div class="done-card glass">
       <div class="done-title">Sesión completa</div>
@@ -1350,7 +1339,6 @@
     </div>
   </div>
 
-  <!-- MEMO M2 OP SCREEN -->
   <div class="screen hidden" id="screen-memo">
     <div class="memo-header">
       <button class="btn-back glass btn-plain" onclick="memoGoHome()">‹</button>
@@ -1722,10 +1710,12 @@
       countdownInterval: null,
       countdownIdx: 0,
       countdownPhase: null,
-      countdownPaused: false,   // NEW: true when corners done, waiting for user to continue
-      // session timer (memo + test combined)
-      sessionTimerInterval: null,
-      sessionTimerSecs: 0,
+      countdownPaused: false,
+      // DOUBLE TIMERS
+      memoTimerInterval: null,
+      memoTimerSecs: 0,
+      execTimerInterval: null,
+      execTimerSecs: 0,
       // test
       testPhase: null,
       testAnswers: [],
@@ -1747,22 +1737,41 @@
       return CORNER_FORBIDDEN_GROUPS.some(grp => grp.includes(a) && grp.includes(b));
     }
 
-    /* ─── Session timer ─── */
+    /* ─── Session timers ─── */
 
-    function startSessionTimer() {
-      clearInterval(memo.sessionTimerInterval);
-      memo.sessionTimerSecs = 0;
-      memo.sessionTimerInterval = setInterval(() => {
-        memo.sessionTimerSecs++;
-        // Update timer display if visible
-        const el = document.getElementById('memoTimerVal');
-        if (el) el.textContent = formatTime(memo.sessionTimerSecs);
+    function startMemoTimer() {
+      clearInterval(memo.memoTimerInterval);
+      memo.memoTimerInterval = setInterval(() => {
+        memo.memoTimerSecs++;
+        const el = document.getElementById('memoTimerValMemo');
+        if (el) el.textContent = formatTime(memo.memoTimerSecs);
       }, 1000);
     }
 
-    function stopSessionTimer() {
-      clearInterval(memo.sessionTimerInterval);
-      memo.sessionTimerInterval = null;
+    function stopMemoTimer() {
+      clearInterval(memo.memoTimerInterval);
+      memo.memoTimerInterval = null;
+    }
+
+    function startExecTimer() {
+      clearInterval(memo.execTimerInterval);
+      memo.execTimerInterval = setInterval(() => {
+        memo.execTimerSecs++;
+        const el = document.getElementById('memoTimerValExec');
+        if (el) el.textContent = formatTime(memo.execTimerSecs);
+      }, 1000);
+    }
+
+    function stopExecTimer() {
+      clearInterval(memo.execTimerInterval);
+      memo.execTimerInterval = null;
+    }
+
+    function resetM2Timers() {
+      stopMemoTimer();
+      stopExecTimer();
+      memo.memoTimerSecs = 0;
+      memo.execTimerSecs = 0;
     }
 
     /* ─── Generadores sin letras repetidas ─── */
@@ -1816,6 +1825,32 @@
       return n;
     }
 
+    /* ─── Render Timer Bar UI (DUAL) ─── */
+    function renderTimerBar() {
+      const bar = document.createElement('div');
+      bar.className = 'memo-timer-bar';
+      bar.style.width = '100%';
+
+      const isMemoRunning = memo.memoTimerInterval !== null;
+      const isExecRunning = memo.execTimerInterval !== null;
+
+      bar.innerHTML = `
+        <div style="display:flex;align-items:center;gap:8px;opacity:${memo.phase.startsWith('test') ? 0.4 : 1};transition:opacity 0.2s">
+          <div class="memo-timer-icon" style="animation: ${isMemoRunning ? 'pulse 1.2s ease-in-out infinite' : 'none'}; background: ${isMemoRunning || memo.memoTimerSecs > 0 ? 'var(--success)' : 'var(--muted)'}; box-shadow: ${isMemoRunning ? '0 0 0 4px rgba(147,181,157,0.15)' : 'none'}"></div>
+          <div class="memo-timer-label">MEMO</div>
+          <div class="memo-timer-val" id="memoTimerValMemo">${formatTime(memo.memoTimerSecs)}</div>
+        </div>
+        <div style="width:1px;height:20px;background:var(--border);"></div>
+        <div style="display:flex;align-items:center;gap:8px;opacity:${!memo.phase.startsWith('test') ? 0.4 : 1};transition:opacity 0.2s">
+          <div class="memo-timer-icon" style="animation: ${isExecRunning ? 'pulse 1.2s ease-in-out infinite' : 'none'}; background: ${isExecRunning || memo.execTimerSecs > 0 ? 'var(--warn)' : 'var(--muted)'}; box-shadow: ${isExecRunning ? '0 0 0 4px rgba(201,184,122,0.15)' : 'none'}"></div>
+          <div class="memo-timer-label">EXEC</div>
+          <div class="memo-timer-val" id="memoTimerValExec">${formatTime(memo.execTimerSecs)}</div>
+        </div>
+      `;
+      return bar;
+    }
+
+
     /* ─── Render principal ─── */
 
     function openMemo() {
@@ -1827,7 +1862,7 @@
     function memoGoHome() {
       clearInterval(memo.countdownInterval);
       memo.countdownInterval = null;
-      stopSessionTimer();
+      resetM2Timers();
       blurKeyboard();
       showScreen('home');
     }
@@ -1856,14 +1891,8 @@
         badge.classList.add('memo'); badge.textContent = 'MEMO';
         headerTitle.textContent = memo.countdownPhase === 'corners' ? 'Memoriza esquinas' : 'Memoriza aristas';
         hint.textContent = '';
-        // Show "Continuar con aristas" button if paused after corners
-        if (memo.countdownPaused && memo.countdownPhase === 'corners' && memo.includeEdges && memo.generatedEdges.length > 0) {
-          btn.style.display = 'none';
-          footer.style.display = 'flex';
-        } else {
-          btn.style.display = 'none';
-          footer.style.display = 'flex';
-        }
+        btn.style.display = 'none';
+        footer.style.display = 'flex';
         renderCountdown(body, memo.countdownPhase);
 
       } else if (memo.phase === 'test-edges') {
@@ -1979,9 +2008,10 @@
           time.className = 'history-time';
           time.textContent = formatTime(entry.totalSecs);
 
+          const isDNF = entry.dnf !== undefined ? entry.dnf : (entry.pct < 100);
           const score = document.createElement('div');
-          score.className = 'history-score ' + (entry.pct === 100 ? 'good' : entry.pct >= 70 ? 'ok' : 'bad');
-          score.textContent = entry.pct + '%';
+          score.className = 'history-score ' + (isDNF ? 'bad' : 'good');
+          score.textContent = isDNF ? 'DNF' : '100%';
 
           row.appendChild(date);
           row.appendChild(time);
@@ -1997,9 +2027,9 @@
       info.style.cssText = 'padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.03);font-size:13px;color:var(--muted);line-height:1.65;';
       info.innerHTML = `
         <b style="color:var(--text-soft);display:block;margin-bottom:6px;">¿Cómo funciona?</b>
-        1. Memoriza esquinas (pausa) → aristas, con cronómetro corriendo<br>
-        2. Cada letra aparece <b style="color:var(--text-soft);">una sola vez</b> en la secuencia<br>
-        3. Escribe las letras de memoria → resultado con tiempo total
+        1. Memoriza (tiempo MEMO)<br>
+        2. Puedes tomarte el tiempo que necesites, las aristas y esquinas ya no saltarán solas.<br>
+        3. Escribe las letras (tiempo EXEC) → DNF estricto ante el mínimo fallo.
       `;
       body.appendChild(info);
     }
@@ -2017,7 +2047,7 @@
       btnM.textContent = '−';
       btnM.onclick = () => {
         if (type === 'edge')   memo.edgeCount   = Math.max(min, memo.edgeCount - 1);
-        else                    memo.cornerCount = Math.max(min, memo.cornerCount - 1);
+        else                   memo.cornerCount = Math.max(min, memo.cornerCount - 1);
         renderMemo();
       };
 
@@ -2030,7 +2060,7 @@
       btnP.textContent = '+';
       btnP.onclick = () => {
         if (type === 'edge')   memo.edgeCount   = Math.min(max, memo.edgeCount + 1);
-        else                    memo.cornerCount = Math.min(max, memo.cornerCount + 1);
+        else                   memo.cornerCount = Math.min(max, memo.cornerCount + 1);
         renderMemo();
       };
 
@@ -2056,31 +2086,11 @@
         memo.countdownIdx++;
 
         if (memo.countdownIdx >= pairs.length) {
-          // Terminó de mostrar todos los pares de esta fase
+          // Pausa al final sin importar si son aristas o esquinas. Esperará a que toques "Continuar".
           clearInterval(memo.countdownInterval);
           memo.countdownInterval = null;
-
-          if (phase === 'corners') {
-            if (memo.includeEdges && memo.generatedEdges.length > 0) {
-              // Pausa: espera que el usuario pulse "Continuar con aristas"
-              memo.countdownPaused = true;
-              renderMemo();
-            } else {
-              // Solo esquinas → ir al test
-              setTimeout(() => {
-                initTest('corners');
-                memo.phase = 'test-corners';
-                renderMemo();
-              }, 400);
-            }
-          } else {
-            // Aristas terminaron → test de aristas
-            setTimeout(() => {
-              initTest('edges');
-              memo.phase = 'test-edges';
-              renderMemo();
-            }, 400);
-          }
+          memo.countdownPaused = true;
+          renderMemo();
         } else {
           renderMemo();
         }
@@ -2092,72 +2102,65 @@
       startCountdown('edges');
     }
 
+    function continueToTest() {
+      memo.countdownPaused = false;
+      stopMemoTimer();
+      startExecTimer();
+      const firstTestPhase = (memo.includeEdges && memo.generatedEdges.length > 0) ? 'edges' : 'corners';
+      initTest(firstTestPhase);
+      memo.phase = 'test-' + firstTestPhase;
+      renderMemo();
+    }
+
     function skipCountdown() {
       clearInterval(memo.countdownInterval);
       memo.countdownInterval = null;
-      memo.countdownPaused = false;
-      const phase = memo.countdownPhase;
-      if (phase === 'corners') {
-        if (memo.includeEdges && memo.generatedEdges.length > 0) {
-          memo.countdownPaused = true;
-          memo.countdownIdx = memo.generatedCorners.length - 1;
-          renderMemo();
-        } else {
-          initTest('corners');
-          memo.phase = 'test-corners';
-          renderMemo();
-        }
-      } else {
-        initTest('edges');
-        memo.phase = 'test-edges';
-        renderMemo();
-      }
+      memo.countdownPaused = true;
+      const pairs = memo.countdownPhase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
+      memo.countdownIdx = pairs.length; // Va directo a la pantalla de pausa con todas reveladas
+      renderMemo();
     }
 
     function renderCountdown(body, phase) {
       const pairs   = phase === 'edges' ? memo.generatedEdges : memo.generatedCorners;
       const total   = pairs.length;
       const current = Math.min(memo.countdownIdx, total - 1);
-      const [pA, pB] = pairs[current];
+      const [pA, pB] = total > 0 ? pairs[current] : [null, null];
 
       const wrap = document.createElement('div');
       wrap.className = 'countdown-wrap';
 
-      /* Timer display (siempre visible) */
-      const timerBar = document.createElement('div');
-      timerBar.className = 'memo-timer-bar';
-      timerBar.style.width = '100%';
-      const timerIcon = document.createElement('div');
-      timerIcon.className = 'memo-timer-icon';
-      const timerLabel = document.createElement('div');
-      timerLabel.className = 'memo-timer-label';
-      timerLabel.textContent = 'SESIÓN';
-      const timerVal = document.createElement('div');
-      timerVal.className = 'memo-timer-val';
-      timerVal.id = 'memoTimerVal';
-      timerVal.textContent = formatTime(memo.sessionTimerSecs);
-      timerBar.appendChild(timerIcon);
-      timerBar.appendChild(timerLabel);
-      timerBar.appendChild(timerVal);
-      wrap.appendChild(timerBar);
+      /* Timer display dual (siempre visible) */
+      wrap.appendChild(renderTimerBar());
 
-      /* Si está en pausa esperando continuar con aristas */
+      /* Si está en pausa esperando continuar/test */
       if (memo.countdownPaused) {
+        const isLastPhase = (phase === 'edges') || (phase === 'corners' && (!memo.includeEdges || memo.generatedEdges.length === 0));
+
         const doneMsg = document.createElement('div');
         doneMsg.style.cssText = 'text-align:center;padding:18px 0 6px;';
-        doneMsg.innerHTML = `
-          <div style="font-size:38px;font-weight:800;letter-spacing:-.06em;margin-bottom:8px;color:var(--success)">✓</div>
-          <div style="font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;">Esquinas listas</div>
-          <div style="font-size:13px;color:var(--muted);font-weight:600;">Cuando estés listo, pasa a memorizar las aristas</div>
-        `;
+        
+        if (isLastPhase) {
+          doneMsg.innerHTML = `
+            <div style="font-size:38px;font-weight:800;letter-spacing:-.06em;margin-bottom:8px;color:var(--success)">✓</div>
+            <div style="font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;">Memorización completa</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:600;">Cuando estés listo, pasa al test de ejecución</div>
+          `;
+        } else {
+          doneMsg.innerHTML = `
+            <div style="font-size:38px;font-weight:800;letter-spacing:-.06em;margin-bottom:8px;color:var(--success)">✓</div>
+            <div style="font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;">Esquinas listas</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:600;">Cuando estés listo, pasa a memorizar las aristas</div>
+          `;
+        }
         wrap.appendChild(doneMsg);
 
-        /* Chips de esquinas todas reveladas */
+        /* Chips reveladas */
         const chipsWrap = document.createElement('div');
         chipsWrap.className = 'countdown-chips-wrap';
         const chipsLabel = document.createElement('div');
         chipsLabel.className = 'countdown-chips-label';
-        chipsLabel.textContent = `Esquinas — ${totalLettersInPairs(pairs)} letras`;
+        chipsLabel.textContent = (phase === 'edges' ? 'Aristas' : 'Esquinas') + ` — ${totalLettersInPairs(pairs)} letras`;
         chipsWrap.appendChild(chipsLabel);
         const chips = document.createElement('div');
         chips.className = 'countdown-chips';
@@ -2173,8 +2176,13 @@
         /* Botón continuar */
         const btnCont = document.createElement('button');
         btnCont.className = 'btn-continue-edges';
-        btnCont.textContent = 'Continuar con aristas →';
-        btnCont.onclick = continueToEdges;
+        if (isLastPhase) {
+          btnCont.textContent = 'Ir al test →';
+          btnCont.onclick = continueToTest;
+        } else {
+          btnCont.textContent = 'Continuar con aristas →';
+          btnCont.onclick = continueToEdges;
+        }
         wrap.appendChild(btnCont);
 
         body.appendChild(wrap);
@@ -2240,9 +2248,10 @@
       wrap.appendChild(chipsWrap);
 
       /* Botón skip */
+      const isCornersWithEdges = phase === 'corners' && memo.includeEdges && memo.generatedEdges.length > 0;
       const skipBtn = document.createElement('button');
       skipBtn.className = 'btn-skip btn-plain';
-      skipBtn.textContent = phase === 'corners' ? 'Saltar → terminar esquinas' : 'Saltar al test →';
+      skipBtn.textContent = isCornersWithEdges ? 'Saltar → terminar esquinas' : 'Saltar al test →';
       skipBtn.onclick = skipCountdown;
       wrap.appendChild(skipBtn);
 
@@ -2271,22 +2280,8 @@
       }
       answeredL += memo.currentLetterIdx;
 
-      /* Timer bar */
-      const timerBar = document.createElement('div');
-      timerBar.className = 'memo-timer-bar';
-      const timerIcon = document.createElement('div');
-      timerIcon.className = 'memo-timer-icon';
-      const timerLabel = document.createElement('div');
-      timerLabel.className = 'memo-timer-label';
-      timerLabel.textContent = 'SESIÓN';
-      const timerVal = document.createElement('div');
-      timerVal.className = 'memo-timer-val';
-      timerVal.id = 'memoTimerVal';
-      timerVal.textContent = formatTime(memo.sessionTimerSecs);
-      timerBar.appendChild(timerIcon);
-      timerBar.appendChild(timerLabel);
-      timerBar.appendChild(timerVal);
-      body.appendChild(timerBar);
+      /* Timer dual bar */
+      body.appendChild(renderTimerBar());
 
       /* Barra de progreso */
       const progressRow = document.createElement('div');
@@ -2467,15 +2462,28 @@
         } else {
           if (memo.testPhase === 'corners') memo._cornerAnswers = memo.testAnswers;
           else { memo._edgeAnswers = memo.testAnswers; memo._cornerAnswers = []; }
-          stopSessionTimer();
+          
+          stopExecTimer();
           memo.phase = 'result';
           blurKeyboard();
+          
           // Save to history
           const all = [...(memo._edgeAnswers || []), ...(memo._cornerAnswers || [])];
           const correct = all.filter(a => a.correct).length;
           const total = all.length;
-          const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
-          addHistoryEntry({ ts: Date.now(), totalSecs: memo.sessionTimerSecs, pct, correct, total });
+          const dnf = correct < total;
+          
+          addHistoryEntry({ 
+            ts: Date.now(), 
+            totalSecs: memo.memoTimerSecs + memo.execTimerSecs, 
+            memoSecs: memo.memoTimerSecs,
+            execSecs: memo.execTimerSecs,
+            pct: dnf ? 0 : 100, 
+            dnf: dnf,
+            correct, 
+            total 
+          });
+          
           renderMemo();
         }
         return;
@@ -2504,23 +2512,32 @@
     /* ─── Resultado ─── */
 
     function renderResult(body) {
-      const edgeAnswers   = memo._edgeAnswers   || [];
+      const edgeAnswers   = memo._edgeAnswers  || [];
       const cornerAnswers = memo._cornerAnswers || [];
       const all     = [...edgeAnswers, ...cornerAnswers];
       const correct = all.filter(a => a.correct).length;
       const total   = all.length;
-      const pct     = total > 0 ? Math.round((correct / total) * 100) : 0;
-      const color   = pct === 100 ? 'var(--success)' : pct >= 70 ? 'var(--warn)' : 'var(--danger)';
+      
+      const isDNF = correct < total;
+      const scoreText = isDNF ? 'DNF' : '100%';
+      const color   = isDNF ? 'var(--danger)' : 'var(--success)';
 
-      /* Score + tiempo */
+      /* Score + tiempo partido (Memo & Exec) */
       const scoreCard = document.createElement('div');
       scoreCard.className = 'result-score-card glass';
       scoreCard.innerHTML = `
-        <div class="result-score-num" style="color:${color}">${pct}%</div>
+        <div class="result-score-num" style="color:${color}">${scoreText}</div>
         <div class="result-score-label">${correct} / ${total} pares correctos</div>
-        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:12px;">
-          <div style="font-size:28px;font-weight:800;letter-spacing:-.05em;">${formatTime(memo.sessionTimerSecs)}</div>
-          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;">tiempo total<br>de sesión</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:24px;">
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;">${formatTime(memo.memoTimerSecs)}</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:2px;">MEMO</div>
+          </div>
+          <div style="color:var(--border-strong);font-size:24px;font-weight:300;">|</div>
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;">${formatTime(memo.execTimerSecs)}</div>
+            <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:2px;">EXEC</div>
+          </div>
         </div>
       `;
       body.appendChild(scoreCard);
@@ -2539,7 +2556,9 @@
       const cornerLetters = totalLettersInPairs(memo.generatedCorners);
       if (edgeLetters > 0)   statsRow.appendChild(mkStat('ARISTAS', edgeLetters + 'L'));
       if (cornerLetters > 0) statsRow.appendChild(mkStat('ESQUINAS', cornerLetters + 'L'));
-      const secsPerPair = total > 0 ? (memo.sessionTimerSecs / total).toFixed(1) : '—';
+      
+      const totalSecs = memo.memoTimerSecs + memo.execTimerSecs;
+      const secsPerPair = total > 0 ? (totalSecs / total).toFixed(1) : '—';
       statsRow.appendChild(mkStat('S/PAR', secsPerPair + 's'));
       body.appendChild(statsRow);
 
@@ -2590,8 +2609,9 @@
         memo._edgeAnswers   = [];
         memo._cornerAnswers = [];
 
-        // Iniciar cronómetro de sesión
-        startSessionTimer();
+        // Reiniciar e Iniciar cronómetro de MEMO
+        resetM2Timers();
+        startMemoTimer();
 
         // Empieza siempre por esquinas si están activas, si no directo aristas
         if (memo.includeCorners && memo.generatedCorners.length > 0) {
@@ -2603,7 +2623,7 @@
       } else if (memo.phase === 'result') {
         memo.phase = 'config';
         memo._edgeAnswers = []; memo._cornerAnswers = [];
-        memo.sessionTimerSecs = 0;
+        resetM2Timers();
         renderMemo();
       }
     }
