@@ -880,6 +880,63 @@
       border-color: rgba(255,255,255,0.26);
     }
 
+    /* ── Memo timer display ── */
+    .memo-timer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .memo-timer-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(147,181,157,0.15);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: .7; }
+    }
+
+    .memo-timer-val {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .memo-timer-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Countdown paused / next step ── */
+    .btn-continue-edges {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 18px;
+      background: #eef2f8;
+      color: #12151b;
+      font-size: 15px;
+      font-weight: 800;
+      border: 0;
+      transition: opacity .18s ease, transform .12s ease;
+      cursor: pointer;
+    }
+
+    .btn-continue-edges:active { transform: scale(.99); }
+
     .btn-skip {
       width: 100%;
       min-height: 48px;
@@ -1051,6 +1108,84 @@
 
     .result-score-num   { font-size: 48px; font-weight: 800; letter-spacing: -.07em; }
     .result-score-label { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+    /* History */
+    .history-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .history-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .btn-clear-history {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--danger);
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: .06em;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(212,148,148,0.25);
+    }
+
+    .btn-clear-history:active { opacity: .7; }
+
+    .history-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .history-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .history-date {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      min-width: 60px;
+    }
+
+    .history-time {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      flex: 1;
+    }
+
+    .history-score {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .history-score.good { color: var(--success); }
+    .history-score.ok   { color: var(--warn); }
+    .history-score.bad  { color: var(--danger); }
+
+    .history-empty {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      padding: 14px;
+    }
 
     .memo-footer {
       position: fixed;
@@ -1241,6 +1376,7 @@
     };
 
     const STORAGE_KEY = '3style_dataset_v2';
+    const HISTORY_KEY = '3style_memo_history_v1';
     const SET_ORDER = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
     const DB = { UF: null, UFR: null, PAIRS: null, PARITY: null, UF_PAIRS: {}, UFR_PAIRS: {} };
 
@@ -1526,7 +1662,41 @@
     function confirmBack(e) { e.stopPropagation(); pauseTimer(); showScreen('home'); }
 
     /* ============================================================
-       MEMO M2 OP
+       MEMO M2 OP — HISTORY
+    ============================================================ */
+
+    function loadHistory() {
+      try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (_) { return []; }
+    }
+
+    function saveHistory(history) {
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch (_) {}
+    }
+
+    function addHistoryEntry(entry) {
+      const history = loadHistory();
+      history.unshift(entry);
+      if (history.length > 30) history.splice(30);
+      saveHistory(history);
+    }
+
+    function clearHistory() {
+      if (confirm('¿Eliminar todos los tiempos guardados?')) {
+        saveHistory([]);
+        renderMemo();
+      }
+    }
+
+    function formatShortDate(ts) {
+      const d = new Date(ts);
+      return d.getDate().toString().padStart(2,'0') + '/' + (d.getMonth()+1).toString().padStart(2,'0');
+    }
+
+    /* ============================================================
+       MEMO M2 OP — MAIN STATE
     ============================================================ */
 
     const MEMO_EDGES_LETTERS   = ['F','P','B','A','G','U','N','I','C','H','O','K','Q','J','E','M','S','L','D','R','T','Y'];
@@ -1552,6 +1722,10 @@
       countdownInterval: null,
       countdownIdx: 0,
       countdownPhase: null,
+      countdownPaused: false,   // NEW: true when corners done, waiting for user to continue
+      // session timer (memo + test combined)
+      sessionTimerInterval: null,
+      sessionTimerSecs: 0,
       // test
       testPhase: null,
       testAnswers: [],
@@ -1573,15 +1747,30 @@
       return CORNER_FORBIDDEN_GROUPS.some(grp => grp.includes(a) && grp.includes(b));
     }
 
+    /* ─── Session timer ─── */
+
+    function startSessionTimer() {
+      clearInterval(memo.sessionTimerInterval);
+      memo.sessionTimerSecs = 0;
+      memo.sessionTimerInterval = setInterval(() => {
+        memo.sessionTimerSecs++;
+        // Update timer display if visible
+        const el = document.getElementById('memoTimerVal');
+        if (el) el.textContent = formatTime(memo.sessionTimerSecs);
+      }, 1000);
+    }
+
+    function stopSessionTimer() {
+      clearInterval(memo.sessionTimerInterval);
+      memo.sessionTimerInterval = null;
+    }
+
     /* ─── Generadores sin letras repetidas ─── */
 
     function generateEdgePairs(letterCount) {
-      // 1) Mezclar pool único
       const pool = [...MEMO_EDGES_LETTERS];
       shuffle(pool);
-      // 2) Tomar las primeras letterCount letras
       const chosen = pool.slice(0, letterCount);
-      // 3) Agrupar en pares validando forbidden
       return buildPairsFromChosen(chosen, edgePairForbidden);
     }
 
@@ -1593,12 +1782,10 @@
     }
 
     function buildPairsFromChosen(chosen, forbiddenFn) {
-      // Intentar resolver conflictos forbidden intercambiando letras adyacentes
       const arr = [...chosen];
       for (let i = 0; i < arr.length - 1; i += 2) {
         const a = arr[i], b = arr[i+1];
         if (forbiddenFn(a, b)) {
-          // Buscar la siguiente letra disponible para intercambiar con b
           let swapped = false;
           for (let j = i + 2; j < arr.length; j++) {
             if (!forbiddenFn(a, arr[j])) {
@@ -1607,13 +1794,11 @@
               break;
             }
           }
-          // Si no hay swap posible, intercambiar a con el anterior disponible
           if (!swapped && i > 0) {
             [arr[i], arr[i-1]] = [arr[i-1], arr[i]];
           }
         }
       }
-      // Construir array de pares [a,b] o [a,null] si impar
       const pairs = [];
       for (let i = 0; i < arr.length; i += 2) {
         if (i + 1 < arr.length) {
@@ -1642,6 +1827,7 @@
     function memoGoHome() {
       clearInterval(memo.countdownInterval);
       memo.countdownInterval = null;
+      stopSessionTimer();
       blurKeyboard();
       showScreen('home');
     }
@@ -1668,10 +1854,16 @@
 
       } else if (memo.phase === 'countdown-corners' || memo.phase === 'countdown-edges') {
         badge.classList.add('memo'); badge.textContent = 'MEMO';
-        headerTitle.textContent = memo.phase === 'countdown-corners' ? 'Memoriza esquinas' : 'Memoriza aristas';
+        headerTitle.textContent = memo.countdownPhase === 'corners' ? 'Memoriza esquinas' : 'Memoriza aristas';
         hint.textContent = '';
-        btn.style.display = 'none';
-        footer.style.display = 'flex';
+        // Show "Continuar con aristas" button if paused after corners
+        if (memo.countdownPaused && memo.countdownPhase === 'corners' && memo.includeEdges && memo.generatedEdges.length > 0) {
+          btn.style.display = 'none';
+          footer.style.display = 'flex';
+        } else {
+          btn.style.display = 'none';
+          footer.style.display = 'flex';
+        }
         renderCountdown(body, memo.countdownPhase);
 
       } else if (memo.phase === 'test-edges') {
@@ -1742,13 +1934,72 @@
         body.appendChild(s);
       }
 
+      // History section
+      const history = loadHistory();
+      const histSection = document.createElement('div');
+      histSection.className = 'history-section';
+
+      const histHeader = document.createElement('div');
+      histHeader.className = 'history-header';
+
+      const histTitle = document.createElement('div');
+      histTitle.className = 'history-title';
+      histTitle.textContent = 'Tiempos de sesión';
+
+      histHeader.appendChild(histTitle);
+
+      if (history.length > 0) {
+        const btnClear = document.createElement('button');
+        btnClear.className = 'btn-clear-history btn-plain';
+        btnClear.textContent = 'Eliminar';
+        btnClear.onclick = clearHistory;
+        histHeader.appendChild(btnClear);
+      }
+
+      histSection.appendChild(histHeader);
+
+      const histList = document.createElement('div');
+      histList.className = 'history-list';
+
+      if (!history.length) {
+        const empty = document.createElement('div');
+        empty.className = 'history-empty';
+        empty.textContent = 'Sin sesiones aún';
+        histList.appendChild(empty);
+      } else {
+        history.slice(0, 8).forEach(entry => {
+          const row = document.createElement('div');
+          row.className = 'history-row';
+
+          const date = document.createElement('div');
+          date.className = 'history-date';
+          date.textContent = formatShortDate(entry.ts);
+
+          const time = document.createElement('div');
+          time.className = 'history-time';
+          time.textContent = formatTime(entry.totalSecs);
+
+          const score = document.createElement('div');
+          score.className = 'history-score ' + (entry.pct === 100 ? 'good' : entry.pct >= 70 ? 'ok' : 'bad');
+          score.textContent = entry.pct + '%';
+
+          row.appendChild(date);
+          row.appendChild(time);
+          row.appendChild(score);
+          histList.appendChild(row);
+        });
+      }
+
+      histSection.appendChild(histList);
+      body.appendChild(histSection);
+
       const info = document.createElement('div');
       info.style.cssText = 'padding:14px 16px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.03);font-size:13px;color:var(--muted);line-height:1.65;';
       info.innerHTML = `
         <b style="color:var(--text-soft);display:block;margin-bottom:6px;">¿Cómo funciona?</b>
-        1. Los pares aparecen <b style="color:var(--text-soft);">uno por segundo</b> con cronómetro<br>
+        1. Memoriza esquinas (pausa) → aristas, con cronómetro corriendo<br>
         2. Cada letra aparece <b style="color:var(--text-soft);">una sola vez</b> en la secuencia<br>
-        3. Memorizas esquinas → aristas → test → resultado
+        3. Escribe las letras de memoria → resultado con tiempo total
       `;
       body.appendChild(info);
     }
@@ -1796,6 +2047,7 @@
       clearInterval(memo.countdownInterval);
       memo.countdownPhase = phase;
       memo.countdownIdx   = 0;
+      memo.countdownPaused = false;
       memo.phase = 'countdown-' + phase;
       renderMemo();
 
@@ -1804,38 +2056,52 @@
         memo.countdownIdx++;
 
         if (memo.countdownIdx >= pairs.length) {
-          // Terminó de mostrar todos los pares
+          // Terminó de mostrar todos los pares de esta fase
           clearInterval(memo.countdownInterval);
           memo.countdownInterval = null;
 
-          setTimeout(() => {
-            if (phase === 'corners') {
-              if (memo.includeEdges && memo.generatedEdges.length > 0) {
-                startCountdown('edges');
-              } else {
+          if (phase === 'corners') {
+            if (memo.includeEdges && memo.generatedEdges.length > 0) {
+              // Pausa: espera que el usuario pulse "Continuar con aristas"
+              memo.countdownPaused = true;
+              renderMemo();
+            } else {
+              // Solo esquinas → ir al test
+              setTimeout(() => {
                 initTest('corners');
                 memo.phase = 'test-corners';
                 renderMemo();
-              }
-            } else {
+              }, 400);
+            }
+          } else {
+            // Aristas terminaron → test de aristas
+            setTimeout(() => {
               initTest('edges');
               memo.phase = 'test-edges';
               renderMemo();
-            }
-          }, 700);
+            }, 400);
+          }
         } else {
           renderMemo();
         }
       }, 1000);
     }
 
+    function continueToEdges() {
+      memo.countdownPaused = false;
+      startCountdown('edges');
+    }
+
     function skipCountdown() {
       clearInterval(memo.countdownInterval);
       memo.countdownInterval = null;
+      memo.countdownPaused = false;
       const phase = memo.countdownPhase;
       if (phase === 'corners') {
         if (memo.includeEdges && memo.generatedEdges.length > 0) {
-          startCountdown('edges');
+          memo.countdownPaused = true;
+          memo.countdownIdx = memo.generatedCorners.length - 1;
+          renderMemo();
         } else {
           initTest('corners');
           memo.phase = 'test-corners';
@@ -1856,6 +2122,64 @@
 
       const wrap = document.createElement('div');
       wrap.className = 'countdown-wrap';
+
+      /* Timer display (siempre visible) */
+      const timerBar = document.createElement('div');
+      timerBar.className = 'memo-timer-bar';
+      timerBar.style.width = '100%';
+      const timerIcon = document.createElement('div');
+      timerIcon.className = 'memo-timer-icon';
+      const timerLabel = document.createElement('div');
+      timerLabel.className = 'memo-timer-label';
+      timerLabel.textContent = 'SESIÓN';
+      const timerVal = document.createElement('div');
+      timerVal.className = 'memo-timer-val';
+      timerVal.id = 'memoTimerVal';
+      timerVal.textContent = formatTime(memo.sessionTimerSecs);
+      timerBar.appendChild(timerIcon);
+      timerBar.appendChild(timerLabel);
+      timerBar.appendChild(timerVal);
+      wrap.appendChild(timerBar);
+
+      /* Si está en pausa esperando continuar con aristas */
+      if (memo.countdownPaused) {
+        const doneMsg = document.createElement('div');
+        doneMsg.style.cssText = 'text-align:center;padding:18px 0 6px;';
+        doneMsg.innerHTML = `
+          <div style="font-size:38px;font-weight:800;letter-spacing:-.06em;margin-bottom:8px;color:var(--success)">✓</div>
+          <div style="font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px;">Esquinas listas</div>
+          <div style="font-size:13px;color:var(--muted);font-weight:600;">Cuando estés listo, pasa a memorizar las aristas</div>
+        `;
+        wrap.appendChild(doneMsg);
+
+        /* Chips de esquinas todas reveladas */
+        const chipsWrap = document.createElement('div');
+        chipsWrap.className = 'countdown-chips-wrap';
+        const chipsLabel = document.createElement('div');
+        chipsLabel.className = 'countdown-chips-label';
+        chipsLabel.textContent = `Esquinas — ${totalLettersInPairs(pairs)} letras`;
+        chipsWrap.appendChild(chipsLabel);
+        const chips = document.createElement('div');
+        chips.className = 'countdown-chips';
+        pairs.forEach(([a, b]) => {
+          const chip = document.createElement('div');
+          chip.className = 'cchip revealed';
+          chip.textContent = b ? `${a}·${b}` : `${a}`;
+          chips.appendChild(chip);
+        });
+        chipsWrap.appendChild(chips);
+        wrap.appendChild(chipsWrap);
+
+        /* Botón continuar */
+        const btnCont = document.createElement('button');
+        btnCont.className = 'btn-continue-edges';
+        btnCont.textContent = 'Continuar con aristas →';
+        btnCont.onclick = continueToEdges;
+        wrap.appendChild(btnCont);
+
+        body.appendChild(wrap);
+        return;
+      }
 
       /* Anillo SVG */
       const R = 50, stroke = 7;
@@ -1918,7 +2242,7 @@
       /* Botón skip */
       const skipBtn = document.createElement('button');
       skipBtn.className = 'btn-skip btn-plain';
-      skipBtn.textContent = 'Saltar al test →';
+      skipBtn.textContent = phase === 'corners' ? 'Saltar → terminar esquinas' : 'Saltar al test →';
       skipBtn.onclick = skipCountdown;
       wrap.appendChild(skipBtn);
 
@@ -1946,6 +2270,23 @@
         const [a,b] = pairs[i]; if(a) answeredL++; if(b) answeredL++;
       }
       answeredL += memo.currentLetterIdx;
+
+      /* Timer bar */
+      const timerBar = document.createElement('div');
+      timerBar.className = 'memo-timer-bar';
+      const timerIcon = document.createElement('div');
+      timerIcon.className = 'memo-timer-icon';
+      const timerLabel = document.createElement('div');
+      timerLabel.className = 'memo-timer-label';
+      timerLabel.textContent = 'SESIÓN';
+      const timerVal = document.createElement('div');
+      timerVal.className = 'memo-timer-val';
+      timerVal.id = 'memoTimerVal';
+      timerVal.textContent = formatTime(memo.sessionTimerSecs);
+      timerBar.appendChild(timerIcon);
+      timerBar.appendChild(timerLabel);
+      timerBar.appendChild(timerVal);
+      body.appendChild(timerBar);
 
       /* Barra de progreso */
       const progressRow = document.createElement('div');
@@ -2126,8 +2467,16 @@
         } else {
           if (memo.testPhase === 'corners') memo._cornerAnswers = memo.testAnswers;
           else { memo._edgeAnswers = memo.testAnswers; memo._cornerAnswers = []; }
+          stopSessionTimer();
           memo.phase = 'result';
-          blurKeyboard(); renderMemo();
+          blurKeyboard();
+          // Save to history
+          const all = [...(memo._edgeAnswers || []), ...(memo._cornerAnswers || [])];
+          const correct = all.filter(a => a.correct).length;
+          const total = all.length;
+          const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+          addHistoryEntry({ ts: Date.now(), totalSecs: memo.sessionTimerSecs, pct, correct, total });
+          renderMemo();
         }
         return;
       }
@@ -2163,13 +2512,36 @@
       const pct     = total > 0 ? Math.round((correct / total) * 100) : 0;
       const color   = pct === 100 ? 'var(--success)' : pct >= 70 ? 'var(--warn)' : 'var(--danger)';
 
+      /* Score + tiempo */
       const scoreCard = document.createElement('div');
       scoreCard.className = 'result-score-card glass';
       scoreCard.innerHTML = `
         <div class="result-score-num" style="color:${color}">${pct}%</div>
         <div class="result-score-label">${correct} / ${total} pares correctos</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:12px;">
+          <div style="font-size:28px;font-weight:800;letter-spacing:-.05em;">${formatTime(memo.sessionTimerSecs)}</div>
+          <div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.1em;text-transform:uppercase;">tiempo total<br>de sesión</div>
+        </div>
       `;
       body.appendChild(scoreCard);
+
+      /* Stats rápidos */
+      const statsRow = document.createElement('div');
+      statsRow.style.cssText = 'display:flex;gap:8px;';
+      const mkStat = (label, val) => {
+        const d = document.createElement('div');
+        d.style.cssText = 'flex:1;padding:12px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.03);text-align:center;';
+        d.innerHTML = `<div style="font-size:20px;font-weight:800;letter-spacing:-.04em;">${val}</div><div style="font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:3px;">${label}</div>`;
+        return d;
+      };
+
+      const edgeLetters  = totalLettersInPairs(memo.generatedEdges);
+      const cornerLetters = totalLettersInPairs(memo.generatedCorners);
+      if (edgeLetters > 0)   statsRow.appendChild(mkStat('ARISTAS', edgeLetters + 'L'));
+      if (cornerLetters > 0) statsRow.appendChild(mkStat('ESQUINAS', cornerLetters + 'L'));
+      const secsPerPair = total > 0 ? (memo.sessionTimerSecs / total).toFixed(1) : '—';
+      statsRow.appendChild(mkStat('S/PAR', secsPerPair + 's'));
+      body.appendChild(statsRow);
 
       function renderSection(answers, title) {
         if (!answers.length) return;
@@ -2218,6 +2590,9 @@
         memo._edgeAnswers   = [];
         memo._cornerAnswers = [];
 
+        // Iniciar cronómetro de sesión
+        startSessionTimer();
+
         // Empieza siempre por esquinas si están activas, si no directo aristas
         if (memo.includeCorners && memo.generatedCorners.length > 0) {
           startCountdown('corners');
@@ -2228,6 +2603,7 @@
       } else if (memo.phase === 'result') {
         memo.phase = 'config';
         memo._edgeAnswers = []; memo._cornerAnswers = [];
+        memo.sessionTimerSecs = 0;
         renderMemo();
       }
     }
