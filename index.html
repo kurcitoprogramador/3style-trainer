@@ -1698,12 +1698,12 @@
       ['A','B','C'],['D','E','F'],['I','G','H'],['M','N','O'],['P','Q','R'],['S','T','U'],['K','L','J']
     ];
 
-    let memo = {
+   let memo = {
       phase: 'config',
       includeEdges: true,
       includeCorners: true,
-      edgeCount: 10,
-      cornerCount: 6,
+      edgeCount: Math.floor(Math.random() * 4) + 9,   // Da 9, 10, 11 o 12
+      cornerCount: Math.floor(Math.random() * 3) + 6, // Da 6, 7 u 8
       generatedEdges: [],
       generatedCorners: [],
       // countdown
@@ -2319,16 +2319,18 @@
 
         const wrap = document.createElement('div');
         wrap.className = 'test-input-wrap';
-        if (isActive) wrap.classList.add('active-slot');
+if (isActive) wrap.classList.add('active-slot');
         if (isDone) {
-          const ok = typedA.toUpperCase() === correctA && (correctB ? typedB.toUpperCase() === correctB : true);
-          wrap.classList.add(ok ? 'correct' : 'wrong');
+          // En lugar de ponerlo verde o rojo, lo dejamos con un tono neutral
+          wrap.style.borderColor = 'rgba(255,255,255,0.15)';
+          wrap.style.background = 'rgba(255,255,255,0.02)';
         }
 
         const boxA = document.createElement('div');
         boxA.className = 'test-letter-box';
         if (isDone) {
-          boxA.classList.add(typedA.toUpperCase() === correctA ? 'correct-letter' : 'wrong-letter');
+          // Mostramos la letra sin colorearla
+          boxA.style.color = 'var(--text-soft)';
           boxA.textContent = typedA || '_';
         } else if (isActive && memo.currentLetterIdx === 0) {
           if (typedA) boxA.textContent = typedA;
@@ -2344,7 +2346,8 @@
           const sep = document.createElement('div'); sep.className = 'test-sep'; sep.textContent = '·';
           const boxB = document.createElement('div'); boxB.className = 'test-letter-box';
           if (isDone) {
-            boxB.classList.add(typedB.toUpperCase() === correctB ? 'correct-letter' : 'wrong-letter');
+            // Mostramos la letra sin colorearla
+            boxB.style.color = 'var(--text-soft)';
             boxB.textContent = typedB || '_';
           } else if (isActive && memo.currentLetterIdx === 1) {
             if (typedB) boxB.textContent = typedB;
@@ -2366,21 +2369,7 @@
 
       body.appendChild(grid);
 
-      /* Hint de respuesta correcta si el último par estuvo mal */
-      if (memo.currentTestPairIdx > 0) {
-        const li = memo.currentTestPairIdx - 1;
-        const [ca, cb] = pairs[li];
-        const ta = (memo.typedLetters[li] || [])[0] || '';
-        const tb = cb ? ((memo.typedLetters[li] || [])[1] || '') : null;
-        const wasOk = ta.toUpperCase() === ca && (cb ? tb.toUpperCase() === cb : true);
-        if (!wasOk) {
-          const hint = document.createElement('div');
-          hint.className = 'test-answer-row';
-          const cd = cb ? `${ca} · ${cb}` : `${ca}`;
-          hint.innerHTML = `<span>Par ${li+1} correcto:</span><span style="font-size:18px;font-weight:800;color:var(--success)">${cd}</span>`;
-          body.appendChild(hint);
-        }
-      }
+      // (ELIMINADO: Se borró por completo el bloque del "Hint de respuesta correcta")
 
       setTimeout(() => {
         const slots = body.querySelectorAll('.test-pair-slot');
